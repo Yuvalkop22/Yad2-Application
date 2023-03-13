@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "439472231348",
+    "project_id": "final-project-app-d181c",
+    "storage_bucket": "final-project-app-d181c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:439472231348:android:118bf61d72f9207081d8e1",
+        "android_client_info": {
+          "package_name": "com.example.yad2application"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "439472231348-ar47rpeq7sg61r94gfidpemu8r20bia4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_9Qv11LRqk7yTDjwxLc1q2zb9ohlyQ3o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "439472231348-ar47rpeq7sg61r94gfidpemu8r20bia4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
