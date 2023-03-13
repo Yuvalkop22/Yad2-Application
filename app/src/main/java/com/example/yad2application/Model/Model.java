@@ -42,7 +42,7 @@ public class Model {
     private LiveData<List<Student>> studentList;
     public LiveData<List<Student>> getAllStudents() {
         if(studentList == null){
-            studentList = localDb.studentDao().getAll();
+            //studentList = localDb.studentDao().getAll();
             refreshAllStudents();
         }
         return studentList;
@@ -59,7 +59,7 @@ public class Model {
                 Long time = localLastUpdate;
                 for(Student st:list){
                     // insert new records into ROOM
-                    localDb.studentDao().insertAll(st);
+                    //localDb.studentDao().insertAll(st);
                     if (time < st.getLastUpdated()){
                         time = st.getLastUpdated();
                     }
@@ -78,7 +78,13 @@ public class Model {
 
     public void addStudent(Student st, Listener<Void> listener){
         firebaseModel.addStudent(st,(Void)->{
-            refreshAllStudents();
+            //refreshAllStudents();
+            listener.onComplete(null);
+        });
+    }
+
+    public void signInUser(Student st, Listener<Void>listener){
+        firebaseModel.signInUser(st,(Void)->{
             listener.onComplete(null);
         });
     }

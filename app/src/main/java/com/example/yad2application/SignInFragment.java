@@ -29,6 +29,7 @@ import com.example.yad2application.Model.FirebaseModel;
 import com.example.yad2application.Model.Model;
 import com.example.yad2application.Model.Student;
 import com.example.yad2application.Model.StudentDao;
+import com.example.yad2application.databinding.FragmentSignInBinding;
 import com.example.yad2application.databinding.FragmentSignUpBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -40,12 +41,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
-public class SignUpFragment extends Fragment {
-    FragmentSignUpBinding binding;
-    ActivityResultLauncher<Void> cameraLauncher;
-    ActivityResultLauncher<String> galleryLauncher;
-    Boolean isAvatarSelected = false;
-
+public class SignInFragment extends Fragment {
+    FragmentSignInBinding binding;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +52,7 @@ public class SignUpFragment extends Fragment {
         parentActivity.addMenuProvider(new MenuProvider() {
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-                menu.removeItem(R.id.signUpFragment);
+                menu.removeItem(R.id.signInFragment);
             }
 
             @Override
@@ -63,68 +60,35 @@ public class SignUpFragment extends Fragment {
                 return false;
             }
         },this, Lifecycle.State.RESUMED);
-
-        cameraLauncher = registerForActivityResult(new ActivityResultContracts.TakePicturePreview(), new ActivityResultCallback<Bitmap>() {
-            @Override
-            public void onActivityResult(Bitmap result) {
-                if (result != null) {
-                    binding.avatarImg.setImageBitmap(result);
-                    isAvatarSelected = true;
-                }
-            }
-        });
-        galleryLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(), new ActivityResultCallback<Uri>() {
-            @Override
-            public void onActivityResult(Uri result) {
-                if (result != null){
-                    binding.avatarImg.setImageURI(result);
-                    isAvatarSelected = true;
-                }
-            }
-        });
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding = FragmentSignUpBinding.inflate(inflater,container,false);
+        binding = FragmentSignInBinding.inflate(inflater,container,false);
         View view = binding.getRoot();
 
 
-        binding.btnSignUp.setOnClickListener(new View.OnClickListener() {
+        binding.btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String name = binding.username.getText().toString();
-                String stId = binding.password.getText().toString();
+                String name = binding.usernameSignIn.getText().toString();
+                String stId = binding.passwordSignIn.getText().toString();
                 Log.v("TAG","name = " + name + "," + "password - " + stId);
                 Student st = new Student(stId.toString(),name.toString(),"",false);
-                if (isAvatarSelected){
-                    binding.avatarImg.setDrawingCacheEnabled(true);
-                    binding.avatarImg.buildDrawingCache();
-                    Bitmap bitmap = ((BitmapDrawable) binding.avatarImg.getDrawable()).getBitmap();
-                    Model.instance().uploadImage(name.toString(), bitmap, url-> {
-                        if (url != null) {
-                            st.setAvatarUrl(url);
-                        }
-                    });
-                    Model.instance().addStudent(st,(unused)->{
-                        Navigation.findNavController(view).navigate(R.id.signInFragment);
-                    });
 
-                }
+                Model.instance().signInUser(st,(unused)->{
+                    Navigation.findNavController(view).navigate(R.id.FirstFragment);
+                });
+
+
             }
         });
 
-        //binding.cancellBtn.setOnClickListener(view1 -> Navigation.findNavController(view1).popBackStack(R.id.studentsListFragment,false));
+        binding.cancellBtnSignIn.setOnClickListener(view1 -> Navigation.findNavController(view).navigate(R.id.signUpFragment));
 
-        binding.cameraButton.setOnClickListener(view1->{
-            cameraLauncher.launch(null);
-        });
 
-        binding.galleryButton.setOnClickListener(view1->{
-            galleryLauncher.launch("image/*");
-        });
         return view;
     }
 }
