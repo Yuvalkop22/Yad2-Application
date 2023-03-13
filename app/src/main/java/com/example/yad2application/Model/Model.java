@@ -19,7 +19,7 @@ public class Model {
     private Executor executor = Executors.newSingleThreadExecutor();
     private Handler mainHandler = HandlerCompat.createAsync(Looper.getMainLooper());
     private FirebaseModel firebaseModel = new FirebaseModel();
-    AppLocalDbRepository localDb = AppLocalDb.getAppDb();
+    //AppLocalDbRepository localDb = AppLocalDb.getAppDb();
 
     public static Model instance(){
         return _instance;
