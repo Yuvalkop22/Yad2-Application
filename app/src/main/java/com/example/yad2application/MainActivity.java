@@ -1,5 +1,6 @@
 package com.example.yad2application;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -49,19 +50,15 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.signup) {
-            Toast.makeText(getApplicationContext(),"Sign Up",Toast.LENGTH_LONG).show();
-            return true;
+        switch (item.getItemId()) {
+            case R.id.signin:
+                Navigation.findNavController(this, R.id.signUpFragment).navigate(R.id.signInFragment);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
+
 
     @Override
     public boolean onSupportNavigateUp() {
