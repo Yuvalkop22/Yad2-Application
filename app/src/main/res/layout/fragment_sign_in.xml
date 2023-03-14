@@ -7,13 +7,18 @@
     tools:context=".SignInFragment">
 
     <ScrollView
-        android:layout_width="408dp"
+        android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.529"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
@@ -27,8 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
-                app:startIconDrawable="@drawable/ic_baseline_edit_calendar_24">
+                android:layout_marginEnd="10dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/username_sign_in"
@@ -43,8 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
-                app:startIconDrawable="@drawable/ic_baseline_edit_calendar_24">
+                android:layout_marginEnd="10dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/password_sign_in"
@@ -64,7 +67,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:layout_weight="1"
-                    android:text="Sign In" />
+                    android:text="Log In" />
 
                 <Button
                     android:id="@+id/cancellBtn_sign_in"

@@ -29,7 +29,7 @@
                     android:layout_height="250dp"
                     android:layout_marginTop="8dp"
                     android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/avatar" />
+                    app:srcCompat="@drawable/ic_baseline_person_outline_24" />
 
                 <ImageButton
                     android:id="@+id/galleryButton"
@@ -55,8 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
-                app:startIconDrawable="@drawable/ic_baseline_edit_calendar_24">
+                android:layout_marginEnd="10dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/username"
@@ -71,8 +70,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
-                app:startIconDrawable="@drawable/ic_baseline_edit_calendar_24">
+                android:layout_marginEnd="10dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/password"
