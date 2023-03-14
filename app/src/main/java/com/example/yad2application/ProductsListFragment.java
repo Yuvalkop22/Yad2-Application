@@ -1,9 +1,14 @@
 package com.example.yad2application;
 
+import android.content.Context;
+import android.graphics.Movie;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,99 +17,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.yad2application.Model.Model;
+import com.example.yad2application.Model.Student;
 import com.example.yad2application.ProductModel.Product;
 import com.example.yad2application.ProductModel.ProductModel;
 import com.example.yad2application.databinding.FragmentProductsListBinding;
+import com.squareup.picasso.Picasso;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class ProductsListFragment extends Fragment {
-
-    List<Product> data = new LinkedList<>();
-    ProductRecyclerAdapter adapter;
     FragmentProductsListBinding binding;
+    ProductRecyclerAdapter adapter;
+    ProductsListFragmentViewModel viewModel;
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        viewModel = new ViewModelProvider(this).get(ProductsListFragmentViewModel.class);
     }
-    class ProductViewHolder extends RecyclerView.ViewHolder{
-        TextView nameTv;
-        TextView idTv;
-        CheckBox cb;
-        public ProductViewHolder(@NonNull View itemView,OnItemClickListener listener) {
-            super(itemView);
-            nameTv = itemView.findViewById(R.id.studentlistrow_name_tv);
-            idTv = itemView.findViewById(R.id.studentlistrow_id_tv);
-            cb = itemView.findViewById(R.id.studentlistrow_cb);
-            cb.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int pos = (int)cb.getTag();
-                    Product pro = data.get(pos);
-                    pro.cb = cb.isChecked();
-                }
-            });
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int pos = getAdapterPosition();
-                    Toast.makeText(getContext(),pos,Toast.LENGTH_LONG).show();
-                    listener.onItemClick(pos);
-                }
-            });
-        }
 
-        public void bind(Product prod,int pos) {
-            nameTv.setText(prod.name);
-            idTv.setText(prod.category);
-            cb.setChecked(prod.cb);
-            cb.setTag(pos);
-        }
-    }
-    public interface OnItemClickListener{
-        void onItemClick(int pos);
-    }
-    public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductViewHolder>{
-        OnItemClickListener listener;
-        void setOnItemClickListener(OnItemClickListener listener){
-            this.listener = listener;
-        }
-        LayoutInflater inflater;
-        List<Product> data;
-        public void setData(List<Product> data){
-            this.data = data;
-            notifyDataSetChanged();
-        }
-
-        public ProductRecyclerAdapter(LayoutInflater inflater, List<Product> data) {
-            this.inflater = inflater;
-            this.data = data;
-        }
-
-        @NonNull
-        @Override
-        public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = getLayoutInflater().inflate(R.layout.products_list_row,parent,false);
-            return new ProductViewHolder(view,listener);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
-            Product prod = data.get(position);
-            holder.bind(prod,position);
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return data.size();
-        }
-    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -114,19 +50,124 @@ public class ProductsListFragment extends Fragment {
 
         binding.productsrecyclerList.setHasFixedSize(true);
         binding.productsrecyclerList.setLayoutManager(new LinearLayoutManager(getContext()));
-        ProductModel.instance().getAllProducts((list)->{
-            data = list;
-            adapter.setData(data);
-        });
-
-        adapter = new ProductRecyclerAdapter(inflater,data);
+        adapter = new ProductRecyclerAdapter(getLayoutInflater(),viewModel.getData().getValue());
         binding.productsrecyclerList.setAdapter(adapter);
-        adapter.setOnItemClickListener(new OnItemClickListener() {
+
+        adapter.setOnItemClickListener(new ProductRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int pos) {
-                Log.d("TAG","Row was clicked "  + pos);
+                Log.d("TAG", "Row was clicked " + pos);
+                Product st = viewModel.getData().getValue().get(pos);
             }
         });
+        binding.progressBar.setVisibility(View.GONE);
+
+        viewModel.getData().observe(getViewLifecycleOwner(),list->{
+            adapter.setData(list);
+        });
+
+        ProductModel.instance().EventStudentsListLoadingState.observe(getViewLifecycleOwner(),status->{
+            binding.swipeRefresh.setRefreshing(status == ProductModel.LoadingState.LOADING);
+        });
+
+        binding.swipeRefresh.setOnRefreshListener(()->{
+            reloadData();
+        });
+
         return view;
     }
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        viewModel = new ViewModelProvider(this).get(ProductsListFragmentViewModel.class);
+    }
+
+    void reloadData(){
+//        binding.progressBar.setVisibility(View.VISIBLE);
+        ProductModel.instance().refreshAllProducts();
+    }
+    static class ProductViewHolder extends RecyclerView.ViewHolder{
+        TextView nameTv;
+        TextView idTv;
+        CheckBox cb;
+        List<Product> data;
+        ImageView avatarImage;
+        public ProductViewHolder(@NonNull View itemView, ProductRecyclerAdapter.OnItemClickListener listener, List<Product> data) {
+            super(itemView);
+            this.data = data;
+            nameTv = itemView.findViewById(R.id.studentlistrow_name_tv);
+            idTv = itemView.findViewById(R.id.studentlistrow_id_tv);
+            avatarImage = itemView.findViewById(R.id.studentlistrow_avatar_img);
+            cb = itemView.findViewById(R.id.studentlistrow_cb);
+            cb.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int pos = (int)cb.getTag();
+                    Product st = data.get(pos);
+                    st.cb = cb.isChecked();
+                }
+            });
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int pos = getAdapterPosition();
+                    listener.onItemClick(pos);
+                }
+            });
+        }
+
+        public void bind(Product st, int pos) {
+            nameTv.setText(st.name);
+            idTv.setText(st.description);
+            cb.setChecked(st.cb);
+            cb.setTag(pos);
+            if (st.getAvatarUrl()  != null && st.getAvatarUrl().length() > 5) {
+                Picasso.get().load(st.getAvatarUrl()).placeholder(R.drawable.avatar).into(avatarImage);
+            }else{
+                avatarImage.setImageResource(R.drawable.avatar);
+            }
+        }
+    }
+
+    public static class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductViewHolder>{
+        OnItemClickListener listener;
+        public interface OnItemClickListener{
+            void onItemClick(int pos);
+        }
+
+        LayoutInflater inflater;
+        List<Product> data;
+        public void setData(List<Product> data){
+            this.data = data;
+            notifyDataSetChanged();
+        }
+        public ProductRecyclerAdapter(LayoutInflater inflater, List<Product> data){
+            this.inflater = inflater;
+            this.data = data;
+        }
+
+        void setOnItemClickListener(OnItemClickListener listener){
+            this.listener = listener;
+        }
+        @NonNull
+        @Override
+        public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = inflater.inflate(R.layout.products_list_row,parent,false);
+            return new ProductViewHolder(view,listener, data);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
+            Product st = data.get(position);
+            holder.bind(st,position);
+        }
+
+        @Override
+        public int getItemCount() {
+            if (data == null) return 0;
+            return data.size();
+        }
+
+    }
+
 }

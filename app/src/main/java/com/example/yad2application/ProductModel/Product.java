@@ -46,7 +46,7 @@ public class Product {
     static final String PRICE = "price";
     static final String AVATAR = "avatar";
     static final String CB = "cb";
-    static final String COLLECTION = "products";
+    static final String COLLECTION = "Products";
     static final String LAST_UPDATED = "lastUpdated";
     static final String LOCAL_LAST_UPDATED = "products_local_last_update";
 

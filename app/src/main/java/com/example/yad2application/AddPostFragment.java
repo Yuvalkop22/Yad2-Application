@@ -122,11 +122,10 @@ public class AddPostFragment extends Fragment {
                         if (url != null) {
                             prod.setAvatarUrl(url);
                         }
+                        ProductModel.instance().addProduct(prod,(unused)->{
+                            Toast.makeText(getContext(),"POST ADDED", Toast.LENGTH_LONG).show();
+                        });
                     });
-                    ProductModel.instance().addProduct(prod,(unused)->{
-                        Toast.makeText(getContext(),"POST ADDED", Toast.LENGTH_LONG).show();
-                    });
-
                 }
             }
         });

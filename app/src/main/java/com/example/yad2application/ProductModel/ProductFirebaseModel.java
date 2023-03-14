@@ -8,16 +8,20 @@ import android.util.Patterns;
 import androidx.annotation.NonNull;
 
 import com.example.yad2application.Model.Model;
+import com.example.yad2application.Model.Student;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.util.Listener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -25,6 +29,8 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class ProductFirebaseModel {
@@ -33,31 +39,39 @@ public class ProductFirebaseModel {
     FirebaseAuth auth;
     FirebaseUser firebaseUser;
 
-
-        public void addProduct(Product pro, Model.Listener<Void> listener) {
-        db = FirebaseFirestore.getInstance();
-        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setPersistenceEnabled(true)
-                .build();
-        db.setFirestoreSettings(settings);
-        Map<String,Object> product = new HashMap<>();
-        product.put("name",pro.name);
-        product.put("price",pro.price);
-        product.put("description",pro.description);
-        db.collection("Products").add(pro)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+    public void getAllProductsSince(Long since, ProductModel.Listener<List<Product>> callback){
+        db  = FirebaseFirestore.getInstance();
+        db.collection(Product.COLLECTION)
+                .whereGreaterThanOrEqualTo(Product.LAST_UPDATED, new Timestamp(since,0))
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d("TAG", "DocumentSnapshot added with ID: " + documentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("TAG", "Error adding document", e);
-                        // Handle the error and provide feedback to the user
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        List<Product> list = new LinkedList<>();
+                        if (task.isSuccessful()){
+                            QuerySnapshot jsonsList = task.getResult();
+                            for (DocumentSnapshot json: jsonsList){
+                                Product st = Product.fromJson(json.getData());
+                                list.add(st);
+                            }
+                        }
+                        callback.onComplete(list);
                     }
                 });
+    }
+
+    public void addProduct(Product pro, ProductModel.Listener<Void> listener) {
+//    db = FirebaseFirestore.getInstance();
+
+        db = FirebaseFirestore.getInstance();
+        db.collection(Product.COLLECTION).document(pro.getName()).set(pro.toJson())
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        listener.onComplete(null);
+                    }
+                });
+
     }
 
     public void uploadImage(String name, Bitmap bitmap, ProductModel.Listener<String> listener){
