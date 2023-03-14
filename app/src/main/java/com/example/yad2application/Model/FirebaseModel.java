@@ -1,5 +1,7 @@
 package com.example.yad2application.Model;
 
+import static androidx.fragment.app.FragmentManager.TAG;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -17,6 +19,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
@@ -26,8 +29,10 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class FirebaseModel {
     FirebaseFirestore db;
@@ -83,6 +88,29 @@ public class FirebaseModel {
 
     }
         public void addStudent(Student st, Model.Listener<Void> listener) {
+        db = FirebaseFirestore.getInstance();
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(true)
+                .build();
+        db.setFirestoreSettings(settings);
+        Map<String,Object> user = new HashMap<>();
+        user.put("email",st.name);
+        user.put("password",st.id);
+        db.collection("Users").add(user)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d("TAG", "DocumentSnapshot added with ID: " + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("TAG", "Error adding document", e);
+                        // Handle the error and provide feedback to the user
+                    }
+                });
+
         auth = FirebaseAuth.getInstance();
         firebaseUser = auth.getCurrentUser();
         if (Patterns.EMAIL_ADDRESS.matcher(st.name).matches()) {
@@ -104,15 +132,9 @@ public class FirebaseModel {
             // The email address is invalid, show an error message to the user
             Log.e("TAG","The email address is invalid");
         }
-
     }
 
     public void uploadImage(String name, Bitmap bitmap, Model.Listener<String> listener){
-        db = FirebaseFirestore.getInstance();
-        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setPersistenceEnabled(false)
-                .build();
-        db.setFirestoreSettings(settings);
         storage = FirebaseStorage.getInstance();
 
         StorageReference storageRef = storage.getReference();
