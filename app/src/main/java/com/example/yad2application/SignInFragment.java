@@ -79,7 +79,7 @@ public class SignInFragment extends Fragment {
                 Student st = new Student(stId.toString(),name.toString(),"",false);
 
                 Model.instance().signInUser(st,(unused)->{
-                    Navigation.findNavController(view).navigate(R.id.FirstFragment);
+                    Navigation.findNavController(view).navigate(R.id.SecondFragment);
                 });
 
 

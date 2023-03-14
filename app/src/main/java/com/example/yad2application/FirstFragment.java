@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.yad2application.databinding.FragmentFirstBinding;
@@ -22,8 +23,22 @@ public class FirstFragment extends Fragment {
     ) {
 
         binding = FragmentFirstBinding.inflate(inflater, container, false);
-        return binding.getRoot();
+        View view = binding.getRoot();
+        binding.btnLoginFirst.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(view).navigate(R.id.signInFragment);
+            }
+        });
 
+        binding.btnSignupFirst.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(view).navigate(R.id.signUpFragment);
+            }
+        });
+
+        return view;
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -36,6 +51,8 @@ public class FirstFragment extends Fragment {
 //                        .navigate(R.id.action_FirstFragment_to_SecondFragment);
 //            }
 //        });
+
+
     }
 
     @Override
