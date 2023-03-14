@@ -8,6 +8,7 @@ import androidx.core.os.HandlerCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -18,7 +19,7 @@ public class ProductModel {
     private Executor executor = Executors.newSingleThreadExecutor();
     private Handler mainHandler = HandlerCompat.createAsync(Looper.getMainLooper());
     private ProductFirebaseModel firebaseModel = new ProductFirebaseModel();
-    //AppLocalDbRepository localDb = AppLocalDb.getAppDb();
+    AppLocalDbRepository localDb = AppLocalDb.getAppDb();
 
     public static ProductModel instance(){
         return _instance;
@@ -36,17 +37,19 @@ public class ProductModel {
         NOT_LOADING
     }
     final public MutableLiveData<LoadingState> EventStudentsListLoadingState = new MutableLiveData<LoadingState>(LoadingState.NOT_LOADING);
-
-
-    private LiveData<List<Product>> productList;
-    public LiveData<List<Product>> getAllProducts() {
-        if(productList == null){
-            //studentList = localDb.studentDao().getAll();
-    //        refreshAllStudents();
-        }
-        return productList;
+    public interface GetAllProductsListener{
+        void onComplete(List<Product> data);
     }
+    public void getAllProducts(GetAllProductsListener callback){
 
+        executor.execute(()->{
+            List<Product> data = localDb.productDao().getAll();
+            mainHandler.post(()->{
+                callback.onComplete(data);
+            });
+        });
+
+    }
 
     public void addProduct(Product prod, Listener<Void> listener){
         firebaseModel.addProduct(prod,(Void)->{

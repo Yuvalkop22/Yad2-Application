@@ -36,6 +36,12 @@ public class SecondFragment extends Fragment {
                 Navigation.findNavController(view).navigate(R.id.addPostFragment);
             }
         });
+        binding.btnBuyList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(view).navigate(R.id.productsListFragment);
+            }
+        });
 //        binding.buttonSecond.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
