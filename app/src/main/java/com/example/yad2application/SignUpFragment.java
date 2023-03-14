@@ -13,7 +13,6 @@ import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LiveData;
 import androidx.navigation.Navigation;
 
 import android.util.Log;
@@ -23,33 +22,26 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.example.yad2application.Model.FirebaseModel;
 import com.example.yad2application.Model.Model;
 import com.example.yad2application.Model.Student;
-import com.example.yad2application.Model.StudentDao;
 import com.example.yad2application.databinding.FragmentSignUpBinding;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.List;
 
 public class SignUpFragment extends Fragment {
     FragmentSignUpBinding binding;
     ActivityResultLauncher<Void> cameraLauncher;
     ActivityResultLauncher<String> galleryLauncher;
     Boolean isAvatarSelected = false;
-
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.clear();
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FragmentActivity parentActivity = getActivity();
+        setHasOptionsMenu(true);
+
 
 
         parentActivity.addMenuProvider(new MenuProvider() {
@@ -109,7 +101,7 @@ public class SignUpFragment extends Fragment {
                         }
                     });
                     Model.instance().addStudent(st,(unused)->{
-                        Navigation.findNavController(view).navigate(R.id.signInFragment);
+                        Navigation.findNavController(view).navigate(R.id.logInFragment);
                     });
 
                 }
