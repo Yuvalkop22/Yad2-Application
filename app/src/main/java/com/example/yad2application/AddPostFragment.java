@@ -37,7 +37,7 @@ public class AddPostFragment extends Fragment {
     Boolean isAvatarSelected = false;
     ActivityResultLauncher<Void> cameraLauncher;
     ActivityResultLauncher<String> galleryLauncher;
-
+    String userEmail;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +86,7 @@ public class AddPostFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         binding.spinner.setAdapter(adapter);
 
+        userEmail = ProductModel.instance().getCurrentUser().getEmail();
         binding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -106,7 +107,7 @@ public class AddPostFragment extends Fragment {
                 String category = selectedCategory;
                 String description = binding.description.getText().toString();
                 //Student st = new Student(stId.,name.toString(),"",false);
-                Product prod = new Product(name,"",category,price,description,false);
+                Product prod = new Product(name,"",category,price,description,userEmail,null,false);
                 if (isAvatarSelected){
                     binding.avatarImg.setDrawingCacheEnabled(true);
                     binding.avatarImg.buildDrawingCache();

@@ -11,7 +11,16 @@ import java.util.List;
 public class ProductsListFragmentViewModel extends ViewModel {
     private LiveData<List<Product>> data = ProductModel.instance().getAllProducts();
 
+    private LiveData<List<Product>> dataOwner = ProductModel.instance().getAllProductsOwner(ProductModel.instance().getCurrentUser().getEmail());
+
+    private LiveData<List<Product>> dataAsCustomer = ProductModel.instance().getAllProductsCustomer(ProductModel.instance().getCurrentUser().getEmail());
+
+
     LiveData<List<Product>> getData(){
         return data;
     }
+    LiveData<List<Product>> getDataOwner(){
+        return dataOwner;
+    }
+
 }

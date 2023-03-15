@@ -1,6 +1,7 @@
 package com.example.yad2application.ProductModel;
 
 import android.graphics.Bitmap;
+import android.graphics.Movie;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -12,6 +13,12 @@ import androidx.lifecycle.MutableLiveData;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ProductModel {
     private static final ProductModel _instance = new ProductModel();
@@ -25,7 +32,9 @@ public class ProductModel {
         return _instance;
     }
     private ProductModel(){
+
     }
+
 
     public interface Listener<T>{
         void onComplete(T data);
@@ -45,6 +54,26 @@ public class ProductModel {
             refreshAllProducts();
         }
         return productsList;
+    }
+    public LiveData<List<Product>> getAllProductsOwner(String email) {
+        if(productsList == null){
+            productsList = localDb.productDao().getAllByOwnerEmail(email);
+            refreshAllProducts();
+        }
+        return productsList;
+    }
+
+    public LiveData<List<Product>> getAllProductsCustomer(String email) {
+        if(productsList == null){
+            productsList = localDb.productDao().getAllAsCustomerEmail(email);
+            refreshAllProducts();
+        }
+        return productsList;
+    }
+
+    public Product getProductByName(String name){
+        Product product = localDb.productDao().getProductByName(name);
+        return product;
     }
 
     public void refreshAllProducts(){
@@ -87,4 +116,8 @@ public class ProductModel {
         firebaseModel.uploadImage(name,bitmap,listener);
     }
 
+
+    public FirebaseUser getCurrentUser(){
+        return firebaseModel.getCurrentUser();
+    }
 }
