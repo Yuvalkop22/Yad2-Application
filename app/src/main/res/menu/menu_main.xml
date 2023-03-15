@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.yad2application.MainActivity">
     <item android:id="@+id/profileFragment"
-        android:icon="@drawable/ic_baseline_person_24"
+        android:icon="@drawable/avatar"
         android:title="Profile Icon"
         app:showAsAction="ifRoom" />
     <item

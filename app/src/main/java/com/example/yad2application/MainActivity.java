@@ -16,6 +16,8 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.yad2application.databinding.ActivityMainBinding;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,7 +27,8 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
-
+    FirebaseAuth firebaseAuth;
+    FirebaseUser firebaseUser;
     NavController navController;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
 
         setSupportActionBar(binding.toolbar);
 
@@ -54,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
             return navController.popBackStack();
         }
         if (item.getItemId() == R.id.firstFragment){
+            firebaseAuth.signOut();
             navController.navigate(R.id.firstFragment);
         }
         if (item.getItemId() == R.id.profileFragment){
