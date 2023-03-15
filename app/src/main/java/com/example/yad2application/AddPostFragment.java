@@ -13,6 +13,7 @@ import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -122,6 +123,10 @@ public class AddPostFragment extends Fragment {
                     });
                 }
             }
+        });
+
+        binding.cancellBtn.setOnClickListener((view1)->{
+            Navigation.findNavController(view1).popBackStack();
         });
         binding.cameraButton.setOnClickListener(view1->{
             cameraLauncher.launch(null);
