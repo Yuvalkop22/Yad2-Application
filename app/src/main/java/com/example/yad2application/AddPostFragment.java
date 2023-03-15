@@ -119,6 +119,7 @@ public class AddPostFragment extends Fragment {
                         }
                         ProductModel.instance().addProduct(prod,(unused)->{
                             Toast.makeText(getContext(),"POST ADDED", Toast.LENGTH_LONG).show();
+                            Navigation.findNavController(view).popBackStack();
                         });
                     });
                 }
