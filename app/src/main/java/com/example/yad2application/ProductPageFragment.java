@@ -1,6 +1,7 @@
 package com.example.yad2application;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
@@ -33,16 +35,20 @@ public class ProductPageFragment extends Fragment {
         setHasOptionsMenu(true);
         binding = FragmentProductPageBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
-        Bundle bundle = getArguments();
-        Integer pos = -1;
-        if (bundle != null) {
-            pos = bundle.getInt("pos");
-        }
-        binding.textProductNamePreview.setText(viewModel.getData().getValue().get(pos).getName());
-        binding.textCategoryPreview.setText(viewModel.getData().getValue().get(pos).getCategory());
-        binding.textPricePreview.setText(viewModel.getData().getValue().get(pos).price);
-        binding.textDescriptionPreview.setText(viewModel.getData().getValue().get(pos).getDescription());
-        Picasso.get().load(viewModel.getData().getValue().get(pos).getAvatarUrl()).into(binding.productImg);
+
+        getParentFragmentManager().setFragmentResultListener("posClicked", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                int pos = result.getInt("pos");
+                Log.d("TAG", pos + "");
+                binding.textProductNamePreview.setText(viewModel.getData().getValue().get(pos).getName());
+                binding.textCategoryPreview.setText(viewModel.getData().getValue().get(pos).getCategory());
+                binding.textPricePreview.setText(viewModel.getData().getValue().get(pos).price);
+                binding.textDescriptionPreview.setText(viewModel.getData().getValue().get(pos).getDescription());
+                Picasso.get().load(viewModel.getData().getValue().get(pos).getAvatarUrl()).into(binding.productImg);
+            }
+        });
+
 
 
         binding.btnCancelProdPage.setOnClickListener((view1)->{
