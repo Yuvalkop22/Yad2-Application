@@ -54,10 +54,13 @@ public class ProductsListFragment extends Fragment {
             @Override
             public void onItemClick(int pos) {
                 Log.d("TAG", "Row was clicked " + pos);
-                Product pr = viewModel.getData().getValue().get(pos);
-                bundle.putInt("pos",pos);
-                ProductPageFragment ProductPageFragment = new ProductPageFragment();
-                ProductPageFragment.setArguments(bundle);
+                Bundle bundle = new Bundle();
+                bundle.putInt("pos",pos); // Put anything what you want
+                getParentFragmentManager().setFragmentResult("posClicked",bundle);
+                Log.d("TAG", pos + "");
+                ProductPageFragment productPageFragment = new ProductPageFragment();
+                productPageFragment.setArguments(bundle);
+
                 Navigation.findNavController(view).navigate(R.id.productPageFragment);
             }
         });
