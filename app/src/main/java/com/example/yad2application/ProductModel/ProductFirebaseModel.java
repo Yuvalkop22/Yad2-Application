@@ -51,6 +51,27 @@ public class ProductFirebaseModel {
                 });
     }
 
+//    public void getAllProductSearch(String search, ProductModel.Listener<List<Product>> callback){
+//        db  = FirebaseFirestore.getInstance();
+//        db.collection(Product.COLLECTION)
+//                .whereEqualTo(Product.NAME, search)
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        List<Product> list = new LinkedList<>();
+//                        if (task.isSuccessful()){
+//                            QuerySnapshot jsonsList = task.getResult();
+//                            for (DocumentSnapshot json: jsonsList){
+//                                Product st = Product.fromJson(json.getData());
+//                                list.add(st);
+//                            }
+//                        }
+//                        callback.onComplete(list);
+//                    }
+//                });
+//    }
+
     public void addProduct(Product pro, ProductModel.Listener<Void> listener) {
 //    db = FirebaseFirestore.getInstance();
 

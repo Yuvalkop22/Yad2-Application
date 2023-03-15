@@ -29,7 +29,7 @@
                     android:layout_height="250dp"
                     android:layout_marginTop="8dp"
                     android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/avatar" />
+                    app:srcCompat="@drawable/ic_baseline_add_photo_alternate_24" />
 
                 <ImageButton
                     android:id="@+id/galleryButton"
@@ -61,14 +61,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
-                app:startIconDrawable="@drawable/ic_baseline_edit_calendar_24">
+                android:layout_marginEnd="10dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/product_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="product name" />
+                    android:hint="Product Name" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -77,30 +76,29 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
-                app:startIconDrawable="@drawable/ic_baseline_edit_calendar_24">
+                android:layout_marginEnd="10dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/price"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:hint="price" />
+                    android:hint="Price"
+                    android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
-                app:startIconDrawable="@drawable/ic_baseline_edit_calendar_24">
+                android:layout_marginEnd="10dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="description" />
+                    android:hint="Description" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <androidx.appcompat.widget.LinearLayoutCompat

@@ -25,9 +25,6 @@
         android:label="Home"
         tools:layout="@layout/fragment_second">
         <action
-            android:id="@+id/signUpFragment"
-            app:destination="@id/firstFragment" />
-        <action
             android:id="@+id/action_SecondFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
         <action
@@ -63,11 +60,20 @@
     <fragment
         android:id="@+id/addPostFragment"
         android:name="com.example.yad2application.AddPostFragment"
-        android:label="fragment_add_post"
+        android:label="Upload Product"
         tools:layout="@layout/fragment_add_post" />
     <fragment
         android:id="@+id/productsListFragment"
         android:name="com.example.yad2application.ProductsListFragment"
-        android:label="fragment_products_list"
-        tools:layout="@layout/fragment_products_list" />
+        android:label="List of Products"
+        tools:layout="@layout/fragment_products_list" >
+        <action
+            android:id="@+id/action_productsListFragment_to_productPageFragment"
+            app:destination="@id/productPageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/productPageFragment"
+        android:name="com.example.yad2application.ProductPageFragment"
+        android:label="Product Page"
+        tools:layout="@layout/fragment_product_page" />
 </navigation>
