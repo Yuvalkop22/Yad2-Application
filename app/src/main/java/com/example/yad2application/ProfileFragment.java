@@ -16,8 +16,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.yad2application.Model.Model;
 import com.example.yad2application.databinding.FragmentFirstBinding;
 import com.example.yad2application.databinding.FragmentProfileBinding;
+import com.google.firebase.auth.FirebaseUser;
 
 public class ProfileFragment extends Fragment {
 
@@ -31,6 +33,7 @@ public class ProfileFragment extends Fragment {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
         super.onCreate(savedInstanceState);
+        binding.userEmailTv.setText(binding.userEmailTv.getText() + " " + Model.instance().getUser().getEmail());
         FragmentActivity parentActivity = getActivity();
         parentActivity.addMenuProvider(new MenuProvider() {
             @Override

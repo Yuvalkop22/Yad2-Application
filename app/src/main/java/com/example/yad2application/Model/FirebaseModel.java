@@ -43,6 +43,11 @@ public class FirebaseModel {
 
     }
 
+    public FirebaseUser getUser(){
+        auth = FirebaseAuth.getInstance();
+        firebaseUser = auth.getCurrentUser();
+        return firebaseUser;
+    }
     public void getAllStudentsSince(Long since, Model.Listener<List<Student>> callback){
         db.collection(Student.COLLECTION)
                 .whereGreaterThanOrEqualTo(Student.LAST_UPDATED, new Timestamp(since,0))
