@@ -24,27 +24,32 @@ public class Product {
     public String category="";
     public String price="";
     public String description ="";
+    public String ownerEmail = "";
+    public String customerEmail = "";
     public Boolean cb=false;
     public Long lastUpdated;
 
     public Product(){
     }
 
-    public Product(@NonNull String name, String avatarUrl, String category, String price, String description, Boolean cb) {
+    public Product(@NonNull String name, String avatarUrl, String category, String price, String description, String ownerEmail, String customerEmail, Boolean cb) {
         this.name = name;
         this.avatarUrl = avatarUrl;
         this.category = category;
         this.price = price;
         this.description = description;
+        this.ownerEmail = ownerEmail;
+        this.customerEmail = customerEmail;
         this.cb = cb;
     }
 
     static final String NAME = "name";
-    static final String ID = "id";
     static final String CATEGORY = "category";
     static final String DESCRIPTION = "description";
     static final String PRICE = "price";
     static final String AVATAR = "avatar";
+    static final String OWNEREMAIL = "owneremail";
+    static final String CUSTOMEREMAIL = "customeremail";
     static final String CB = "cb";
     static final String COLLECTION = "Products";
     static final String LAST_UPDATED = "lastUpdated";
@@ -57,7 +62,9 @@ public class Product {
         String description = (String) json.get(DESCRIPTION);
         String avatar = (String)json.get(AVATAR);
         Boolean cb = (Boolean) json.get(CB);
-        Product product = new Product(name,avatar,category,price,description,cb);
+        String owneremail = (String)json.get(OWNEREMAIL);
+        String customeremail = (String) json.get(CUSTOMEREMAIL);
+        Product product = new Product(name,avatar,category,price,description,owneremail,customeremail,cb);
         try{
             Timestamp time = (Timestamp) json.get(LAST_UPDATED);
             product.setLastUpdated(time.getSeconds());
@@ -87,8 +94,18 @@ public class Product {
         json.put(DESCRIPTION,getDescription());
         json.put(AVATAR, getAvatarUrl());
         json.put(CB, getCb());
+        json.put(OWNEREMAIL,getOwnerEmail());
+        json.put(CUSTOMEREMAIL,getCustomerEmail());
         json.put(LAST_UPDATED, FieldValue.serverTimestamp());
         return json;
+    }
+
+    public String getOwnerEmail() {
+        return ownerEmail;
+    }
+
+    public String getCustomerEmail() {
+        return customerEmail;
     }
 
     private String getPrice() {

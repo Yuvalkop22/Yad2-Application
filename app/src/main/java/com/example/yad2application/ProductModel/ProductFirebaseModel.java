@@ -1,7 +1,9 @@
 package com.example.yad2application.ProductModel;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.util.Log;
 import android.util.Patterns;
 
@@ -17,11 +19,15 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.util.Consumer;
 import com.google.firebase.firestore.util.Listener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -32,12 +38,20 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 public class ProductFirebaseModel {
     FirebaseFirestore db;
     FirebaseStorage storage;
     FirebaseAuth auth;
     FirebaseUser firebaseUser;
+    Product product;
+
+    public FirebaseUser getCurrentUser(){
+        auth = FirebaseAuth.getInstance();
+        firebaseUser = auth.getCurrentUser();
+        return firebaseUser;
+    }
 
     public void getAllProductsSince(Long since, ProductModel.Listener<List<Product>> callback){
         db  = FirebaseFirestore.getInstance();
@@ -73,6 +87,10 @@ public class ProductFirebaseModel {
                 });
 
     }
+
+
+
+
 
     public void uploadImage(String name, Bitmap bitmap, ProductModel.Listener<String> listener){
         storage = FirebaseStorage.getInstance();
