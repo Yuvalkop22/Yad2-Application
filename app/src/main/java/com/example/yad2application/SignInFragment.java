@@ -18,7 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.yad2application.Model.Model;
-import com.example.yad2application.Model.Student;
+import com.example.yad2application.Model.User;
 import com.example.yad2application.databinding.FragmentSignInBinding;
 
 public class SignInFragment extends Fragment {
@@ -65,7 +65,7 @@ public class SignInFragment extends Fragment {
                 String name = binding.usernameSignIn.getText().toString();
                 String stId = binding.passwordSignIn.getText().toString();
                 Log.v("TAG","name = " + name + "," + "password - " + stId);
-                Student st = new Student(stId.toString(),name.toString(),"",false);
+                User st = new User(stId.toString(),name.toString(),"",false);
 
                 Model.instance().signInUser(st,(unused)->{
                     Navigation.findNavController(view).navigate(R.id.secondFragment);

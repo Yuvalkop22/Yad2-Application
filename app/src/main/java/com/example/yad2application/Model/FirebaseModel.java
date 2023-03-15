@@ -1,13 +1,9 @@
 package com.example.yad2application.Model;
 
-import static androidx.fragment.app.FragmentManager.TAG;
-
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
 import android.util.Patterns;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -48,18 +44,18 @@ public class FirebaseModel {
         firebaseUser = auth.getCurrentUser();
         return firebaseUser;
     }
-    public void getAllStudentsSince(Long since, Model.Listener<List<Student>> callback){
-        db.collection(Student.COLLECTION)
-                .whereGreaterThanOrEqualTo(Student.LAST_UPDATED, new Timestamp(since,0))
+    public void getAllStudentsSince(Long since, Model.Listener<List<User>> callback){
+        db.collection(User.COLLECTION)
+                .whereGreaterThanOrEqualTo(User.LAST_UPDATED, new Timestamp(since,0))
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                List<Student> list = new LinkedList<>();
+                List<User> list = new LinkedList<>();
                 if (task.isSuccessful()){
                     QuerySnapshot jsonsList = task.getResult();
                     for (DocumentSnapshot json: jsonsList){
-                        Student st = Student.fromJson(json.getData());
+                        User st = User.fromJson(json.getData());
                         list.add(st);
                     }
                 }
@@ -68,7 +64,7 @@ public class FirebaseModel {
         });
     }
 
-    public void signInUser(Student st, Model.Listener<Void> listener) {
+    public void signInUser(User st, Model.Listener<Void> listener) {
         auth = FirebaseAuth.getInstance();
         firebaseUser = auth.getCurrentUser();
         if (Patterns.EMAIL_ADDRESS.matcher(st.name).matches()) {
@@ -92,7 +88,7 @@ public class FirebaseModel {
         }
 
     }
-        public void addStudent(Student st, Model.Listener<Void> listener) {
+        public void addStudent(User st, Model.Listener<Void> listener) {
         db = FirebaseFirestore.getInstance();
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
                 .setPersistenceEnabled(true)
