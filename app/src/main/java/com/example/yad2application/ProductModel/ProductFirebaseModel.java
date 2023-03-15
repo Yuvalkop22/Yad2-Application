@@ -5,40 +5,22 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
-import android.util.Patterns;
 
 import androidx.annotation.NonNull;
 
-import com.example.yad2application.Model.Model;
-import com.example.yad2application.Model.Student;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreSettings;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.util.Consumer;
-import com.google.firebase.firestore.util.Listener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
 import java.io.ByteArrayOutputStream;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 public class ProductFirebaseModel {
     FirebaseFirestore db;
@@ -73,6 +55,27 @@ public class ProductFirebaseModel {
                     }
                 });
     }
+
+//    public void getAllProductSearch(String search, ProductModel.Listener<List<Product>> callback){
+//        db  = FirebaseFirestore.getInstance();
+//        db.collection(Product.COLLECTION)
+//                .whereEqualTo(Product.NAME, search)
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        List<Product> list = new LinkedList<>();
+//                        if (task.isSuccessful()){
+//                            QuerySnapshot jsonsList = task.getResult();
+//                            for (DocumentSnapshot json: jsonsList){
+//                                Product st = Product.fromJson(json.getData());
+//                                list.add(st);
+//                            }
+//                        }
+//                        callback.onComplete(list);
+//                    }
+//                });
+//    }
 
     public void addProduct(Product pro, ProductModel.Listener<Void> listener) {
 //    db = FirebaseFirestore.getInstance();

@@ -1,14 +1,13 @@
 package com.example.yad2application;
 
 import android.content.Context;
-import android.graphics.Movie;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,10 +18,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.yad2application.Model.Model;
-import com.example.yad2application.Model.Student;
 import com.example.yad2application.ProductModel.Product;
 import com.example.yad2application.ProductModel.ProductModel;
 import com.example.yad2application.databinding.FragmentProductsListBinding;

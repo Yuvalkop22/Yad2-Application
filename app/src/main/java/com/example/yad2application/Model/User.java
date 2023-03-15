@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Entity
-public class Student {
+public class User {
     @PrimaryKey
     @NonNull
     public String id="";
@@ -24,9 +24,9 @@ public class Student {
     public Boolean cb=false;
     public Long lastUpdated;
 
-    public Student(){
+    public User(){
     }
-    public Student( String id,String name, String avatarUrl, Boolean cb) {
+    public User(String id, String name, String avatarUrl, Boolean cb) {
         this.name = name;
         this.id = id;
         this.avatarUrl = avatarUrl;
@@ -41,12 +41,12 @@ public class Student {
     static final String LAST_UPDATED = "lastUpdated";
     static final String LOCAL_LAST_UPDATED = "students_local_last_update";
 
-    public static Student fromJson(Map<String,Object> json){
+    public static User fromJson(Map<String,Object> json){
         String id = (String)json.get(ID);
         String name = (String)json.get(NAME);
         String avatar = (String)json.get(AVATAR);
         Boolean cb = (Boolean) json.get(CB);
-        Student st = new Student(id,name,avatar,cb);
+        User st = new User(id,name,avatar,cb);
         try{
             Timestamp time = (Timestamp) json.get(LAST_UPDATED);
             st.setLastUpdated(time.getSeconds());

@@ -7,8 +7,6 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import com.example.yad2application.Model.Student;
-import com.example.yad2application.ProductModel.Product;
 import java.util.List;
 
 @Dao
