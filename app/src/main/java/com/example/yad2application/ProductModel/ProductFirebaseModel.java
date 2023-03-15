@@ -1,7 +1,9 @@
 package com.example.yad2application.ProductModel;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -19,7 +21,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
 import java.io.ByteArrayOutputStream;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,6 +30,13 @@ public class ProductFirebaseModel {
     FirebaseStorage storage;
     FirebaseAuth auth;
     FirebaseUser firebaseUser;
+    Product product;
+
+    public FirebaseUser getCurrentUser(){
+        auth = FirebaseAuth.getInstance();
+        firebaseUser = auth.getCurrentUser();
+        return firebaseUser;
+    }
 
     public void getAllProductsSince(Long since, ProductModel.Listener<List<Product>> callback){
         db  = FirebaseFirestore.getInstance();
@@ -85,6 +93,10 @@ public class ProductFirebaseModel {
                 });
 
     }
+
+
+
+
 
     public void uploadImage(String name, Bitmap bitmap, ProductModel.Listener<String> listener){
         storage = FirebaseStorage.getInstance();
