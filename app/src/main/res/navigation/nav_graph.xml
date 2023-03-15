@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     android:label="Log in"
-    app:startDestination="@id/firstFragment">
+    app:startDestination="@id/secondFragment">
     <fragment
         android:id="@+id/firstFragment"
         android:name="com.example.yad2application.FirstFragment"
@@ -75,5 +75,9 @@
         android:id="@+id/productPageFragment"
         android:name="com.example.yad2application.ProductPageFragment"
         android:label="Product Page"
-        tools:layout="@layout/fragment_product_page" />
+        tools:layout="@layout/fragment_product_page" >
+        <argument
+            android:name="productName"
+            app:argType="string" />
+    </fragment>
 </navigation>

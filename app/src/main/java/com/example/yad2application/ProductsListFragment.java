@@ -37,6 +37,7 @@ public class ProductsListFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(ProductsListFragmentViewModel.class);
     }
 
+    Bundle bundle = new Bundle();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -53,7 +54,11 @@ public class ProductsListFragment extends Fragment {
             @Override
             public void onItemClick(int pos) {
                 Log.d("TAG", "Row was clicked " + pos);
-                Product st = viewModel.getData().getValue().get(pos);
+                Product pr = viewModel.getData().getValue().get(pos);
+                bundle.putInt("pos",pos);
+                ProductPageFragment ProductPageFragment = new ProductPageFragment();
+                ProductPageFragment.setArguments(bundle);
+                Navigation.findNavController(view).navigate(R.id.productPageFragment);
             }
         });
         binding.progressBar.setVisibility(View.GONE);
