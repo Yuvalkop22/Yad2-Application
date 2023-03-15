@@ -22,6 +22,8 @@ public interface ProductDao {
     @Query("SELECT * FROM Product WHERE ownerEmail = :email")
     LiveData<List<Product>> getAllByOwnerEmail(String email);
 
+    @Query("SELECT * FROM Product WHERE customerEmail = :email")
+    LiveData<List<Product>> getAllAsCustomerEmail(String email);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Product... products);
