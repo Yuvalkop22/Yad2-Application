@@ -24,7 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.yad2application.Model.Model;
-import com.example.yad2application.Model.Student;
+import com.example.yad2application.Model.User;
 import com.example.yad2application.databinding.FragmentSignUpBinding;
 
 public class SignUpFragment extends Fragment {
@@ -90,7 +90,7 @@ public class SignUpFragment extends Fragment {
                 String name = binding.username.getText().toString();
                 String stId = binding.password.getText().toString();
                 Log.v("TAG","name = " + name + "," + "password - " + stId);
-                Student st = new Student(stId.toString(),name.toString(),"",false);
+                User st = new User(stId.toString(),name.toString(),"",false);
                 if (isAvatarSelected){
                     binding.avatarImg.setDrawingCacheEnabled(true);
                     binding.avatarImg.buildDrawingCache();

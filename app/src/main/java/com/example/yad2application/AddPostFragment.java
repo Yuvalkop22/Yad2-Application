@@ -13,9 +13,7 @@ import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
-import androidx.navigation.Navigation;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,16 +22,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.yad2application.Model.Model;
-import com.example.yad2application.Model.Student;
 import com.example.yad2application.ProductModel.Product;
 import com.example.yad2application.ProductModel.ProductModel;
 import com.example.yad2application.databinding.FragmentAddPostBinding;
-import com.example.yad2application.databinding.FragmentFirstBinding;
-import com.example.yad2application.databinding.FragmentSignUpBinding;
 
 public class AddPostFragment extends Fragment {
 
