@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/avatarImg"
+            android:id="@+id/productImg"
             android:layout_width="match_parent"
             android:layout_height="250dp"
             android:layout_marginTop="8dp"
@@ -32,22 +32,21 @@
     <TextView
         android:id="@+id/textCategory"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="25dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        android:text="Category:"
         android:fontFamily="sans-serif-medium"
+        android:text="Category:"
+        android:textColor="#8E8D8D"
         android:textSize="20dp"
-        app:layout_constraintEnd_toStartOf="@+id/textCategoryPreview"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/frameLayout" />
 
     <TextView
         android:id="@+id/textCategoryPreview"
-        android:layout_width="298dp"
-        android:layout_height="27dp"
-        android:layout_marginStart="10dp"
+        android:layout_width="200dp"
+        android:layout_height="25dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:fontFamily="sans-serif-medium"
@@ -55,16 +54,16 @@
         android:textSize="20dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textCategory"
         app:layout_constraintTop_toBottomOf="@+id/frameLayout" />
 
     <TextView
         android:id="@+id/textProductName"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="25dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:fontFamily="sans-serif-medium"
+        android:textColor="#8E8D8D"
         android:text="Product Name:"
         android:textSize="20dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -72,9 +71,8 @@
 
     <TextView
         android:id="@+id/textProductNamePreview"
-        android:layout_width="247dp"
-        android:layout_height="28dp"
-        android:layout_marginStart="10dp"
+        android:layout_width="200dp"
+        android:layout_height="25dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:fontFamily="sans-serif-medium"
@@ -82,17 +80,16 @@
         android:textSize="20dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/textProductName"
         app:layout_constraintTop_toBottomOf="@+id/textCategoryPreview" />
 
     <TextView
         android:id="@+id/textPrice"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="25dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:fontFamily="sans-serif-medium"
+        android:textColor="#8E8D8D"
         android:text="Price:"
         android:textSize="20dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -100,25 +97,22 @@
 
     <TextView
         android:id="@+id/textPricePreview"
-        android:layout_width="327dp"
-        android:layout_height="26dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_width="200dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="10dp"
         android:fontFamily="sans-serif-medium"
         android:text="Test"
         android:textSize="20dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/textPrice"
         app:layout_constraintTop_toBottomOf="@+id/textProductNamePreview" />
 
     <TextView
         android:id="@+id/textDescriptionPreview"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="10dp"
         android:fontFamily="sans-serif-medium"
         android:textSize="20dp"
@@ -132,10 +126,11 @@
     <TextView
         android:id="@+id/textDescription"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="25dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:fontFamily="sans-serif-medium"
+        android:textColor="#8E8D8D"
         android:text="Decription:"
         android:textSize="20dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -153,7 +148,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textDescription">
 
         <Button
-            android:id="@+id/btnBuy"
+            android:id="@+id/btnBuyProdPage"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
@@ -161,7 +156,7 @@
             android:text="Buy" />
 
         <Button
-            android:id="@+id/cancellBtn"
+            android:id="@+id/btnCancelProdPage"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
