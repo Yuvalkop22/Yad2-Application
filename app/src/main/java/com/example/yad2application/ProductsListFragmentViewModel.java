@@ -23,4 +23,8 @@ public class ProductsListFragmentViewModel extends ViewModel {
         return dataOwner;
     }
 
+    LiveData<List<Product>> getDataAsCustomer(){
+        return dataAsCustomer;
+    }
+
 }
