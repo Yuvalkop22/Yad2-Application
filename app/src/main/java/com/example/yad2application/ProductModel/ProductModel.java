@@ -59,6 +59,13 @@ public class ProductModel {
         }
         return productsList;
     }
+    public LiveData<List<Product>> getAllProductsOwner(String email) {
+        if(productsList == null){
+            productsList = localDb.productDao().getAllByOwnerEmail(email);
+            refreshAllProducts();
+        }
+        return productsList;
+    }
 
     public Product getProductByName(String name){
         Product product = localDb.productDao().getProductByName(name);
