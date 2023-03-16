@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     android:label="Log in"
-    app:startDestination="@id/secondFragment">
+    app:startDestination="@id/firstFragment">
     <fragment
         android:id="@+id/firstFragment"
         android:name="com.example.yad2application.FirstFragment"
@@ -56,7 +56,14 @@
         android:id="@+id/profileFragment"
         android:name="com.example.yad2application.ProfileFragment"
         android:label="Profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_productsOwnerListFragment"
+            app:destination="@id/productsOwnerListFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_productsCustomerListFragment"
+            app:destination="@id/productsCustomerListFragment" />
+    </fragment>
     <fragment
         android:id="@+id/addPostFragment"
         android:name="com.example.yad2application.AddPostFragment"
@@ -80,4 +87,14 @@
             android:name="productName"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/productsOwnerListFragment"
+        android:name="com.example.yad2application.ProductsOwnerListFragment"
+        android:label="fragment_products_owner_list"
+        tools:layout="@layout/fragment_products_owner_list" />
+    <fragment
+        android:id="@+id/productsCustomerListFragment"
+        android:name="com.example.yad2application.ProductsCustomerListFragment"
+        android:label="fragment_products_customer_list_fragmet"
+        tools:layout="@layout/fragment_products_customer_list_fragmet" />
 </navigation>

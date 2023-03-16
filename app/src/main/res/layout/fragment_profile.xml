@@ -19,9 +19,10 @@
             android:textSize="50sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.57"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.522" />
+            app:layout_constraintVertical_bias="0.352" />
 
         <TextView
             android:id="@+id/user_email_tv"
@@ -37,6 +38,29 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="MissingConstraints" />
+
+        <Button
+            android:id="@+id/btnAllOwner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="184dp"
+            android:text="Owner"
+            app:layout_constraintBottom_toTopOf="@+id/btnAllCustomer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profileText"
+            tools:ignore="MissingConstraints" />
+
+        <Button
+            android:id="@+id/btnAllCustomer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Customer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteY="533dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

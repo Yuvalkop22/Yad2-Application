@@ -11,8 +11,11 @@ import java.util.List;
 
 @Dao
 public interface ProductDao {
-    @Query("select * from Product")
-    LiveData<List<Product>> getAll();
+//    @Query("select * from Product")
+//    LiveData<List<Product>> getAll();
+
+    @Query("select * from Product WHERE ownerEmail != :email")
+    LiveData<List<Product>> getAll(String email);
 
     @Query("SELECT * FROM Product WHERE name = :name")
     Product getProductByName(String name);

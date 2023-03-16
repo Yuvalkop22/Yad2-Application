@@ -6,7 +6,7 @@ import androidx.room.RoomDatabase;
 
 import com.example.yad2application.MyApplication;
 
-@Database(entities = {Product.class}, version = 6)
+@Database(entities = {Product.class}, version = 8)
 abstract class AppLocalDbRepository extends RoomDatabase {
     public abstract ProductDao productDao();
 }
