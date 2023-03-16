@@ -9,7 +9,7 @@ import com.example.yad2application.ProductModel.ProductModel;
 import java.util.List;
 
 public class ProductsListFragmentViewModel extends ViewModel {
-    private LiveData<List<Product>> data = ProductModel.instance().getAllProducts();
+    private LiveData<List<Product>> data = ProductModel.instance().getAllProducts(ProductModel.instance().getCurrentUser().getEmail());
 
 
 

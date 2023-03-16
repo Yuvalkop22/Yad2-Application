@@ -13,6 +13,8 @@ import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import com.example.yad2application.ProductModel.Product;
+import com.example.yad2application.ProductModel.ProductModel;
 import com.example.yad2application.databinding.FragmentProductPageBinding;
 import com.squareup.picasso.Picasso;
 
@@ -41,11 +43,16 @@ public class ProductPageFragment extends Fragment {
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
                 int pos = result.getInt("pos");
                 Log.d("TAG", pos + "");
+
+                Product product = viewModel.getData().getValue().get(pos);
+                
                 binding.textProductNamePreview.setText(viewModel.getData().getValue().get(pos).getName());
                 binding.textCategoryPreview.setText(viewModel.getData().getValue().get(pos).getCategory());
                 binding.textPricePreview.setText(viewModel.getData().getValue().get(pos).price);
                 binding.textDescriptionPreview.setText(viewModel.getData().getValue().get(pos).getDescription());
                 Picasso.get().load(viewModel.getData().getValue().get(pos).getAvatarUrl()).into(binding.productImg);
+
+                Log.e("TAG",product.ownerEmail);
             }
         });
 

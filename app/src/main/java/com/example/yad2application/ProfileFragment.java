@@ -84,6 +84,13 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        binding.btnAllCustomer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Navigation.findNavController(view).navigate(R.id.productsCustomerListFragment);
+            }
+        });
+
         FragmentActivity parentActivity = getActivity();
         parentActivity.addMenuProvider(new MenuProvider() {
             @Override

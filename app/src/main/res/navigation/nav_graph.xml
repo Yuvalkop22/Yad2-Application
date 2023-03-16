@@ -60,6 +60,9 @@
         <action
             android:id="@+id/action_profileFragment_to_productsOwnerListFragment"
             app:destination="@id/productsOwnerListFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_productsCustomerListFragment"
+            app:destination="@id/productsCustomerListFragment" />
     </fragment>
     <fragment
         android:id="@+id/addPostFragment"
@@ -89,4 +92,9 @@
         android:name="com.example.yad2application.ProductsOwnerListFragment"
         android:label="fragment_products_owner_list"
         tools:layout="@layout/fragment_products_owner_list" />
+    <fragment
+        android:id="@+id/productsCustomerListFragment"
+        android:name="com.example.yad2application.ProductsCustomerListFragment"
+        android:label="fragment_products_customer_list_fragmet"
+        tools:layout="@layout/fragment_products_customer_list_fragmet" />
 </navigation>
