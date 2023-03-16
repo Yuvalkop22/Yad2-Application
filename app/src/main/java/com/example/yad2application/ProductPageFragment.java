@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -21,6 +22,7 @@ import com.squareup.picasso.Picasso;
 
 public class ProductPageFragment extends Fragment {
     private FragmentProductPageBinding binding;
+    ProductsListFragmentViewModel viewModel;
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
@@ -34,18 +36,28 @@ public class ProductPageFragment extends Fragment {
         setHasOptionsMenu(true);
         binding = FragmentProductPageBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
+        viewModel = new ViewModelProvider(this).get(ProductsListFragmentViewModel.class);
 
         getParentFragmentManager().setFragmentResultListener("productDetail", this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
                 Log.d("TAG", "In product page -> name: " + result.getString("name"));
 
-                binding.textProductNamePreview.setText(result.getString("name"));
-                binding.textCategoryPreview.setText(result.getString("category"));
-                binding.textPricePreview.setText(result.getString("price"));
-                binding.textDescriptionPreview.setText(result.getString("description"));
-                Picasso.get().load(result.getString("imgURL")).into(binding.productImg);
+                Product pr = (Product) result.getSerializable("product");
+                binding.textProductNamePreview.setText(pr.getName());
+                binding.textCategoryPreview.setText(pr.getCategory());
+                binding.textPricePreview.setText(pr.getPrice());
+                binding.textDescriptionPreview.setText(pr.getDescription());
+                Picasso.get().load(pr.getAvatarUrl()).into(binding.productImg);
 
+                binding.btnBuyProdPage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ProductModel.instance().deleteProduct(pr,(unused)->{
+                            Navigation.findNavController(view).navigate(R.id.productsListFragment);
+                        });
+                    }
+                });
             }
         });
 

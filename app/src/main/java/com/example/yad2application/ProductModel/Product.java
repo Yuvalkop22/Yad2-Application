@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Entity
-public class Product{
+public class Product implements Serializable{
     @PrimaryKey
     @NonNull
     public String name="";

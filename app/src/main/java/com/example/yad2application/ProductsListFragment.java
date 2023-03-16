@@ -24,6 +24,7 @@ import com.example.yad2application.ProductModel.ProductModel;
 import com.example.yad2application.databinding.FragmentProductsListBinding;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class ProductsListFragment extends Fragment {
@@ -56,14 +57,9 @@ public class ProductsListFragment extends Fragment {
                 Log.d("TAG", "Row was clicked " + pos);
                 Product pr = viewModel.getData().getValue().get(pos);
                 Bundle bundle = new Bundle();
-                bundle.putString("name", pr.getName());
-                bundle.putString("category", pr.getCategory());
-                bundle.putString("price", pr.getPrice());
-                bundle.putString("description", pr.getDescription());
-                bundle.putString("imgURL", pr.getAvatarUrl());
-//               bundle.putInt("pos",pos); // Put anything what you want
+                bundle.putSerializable("product", pr);
+
                 getParentFragmentManager().setFragmentResult("productDetail",bundle);
-                Log.d("TAG", "pos clicked: " + pos + " name: " + pr.getName() );
                 ProductPageFragment productPageFragment = new ProductPageFragment();
                 productPageFragment.setArguments(bundle);
 

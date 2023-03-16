@@ -11,8 +11,6 @@ import java.util.List;
 
 @Dao
 public interface ProductDao {
-//    @Query("select * from Product")
-//    LiveData<List<Product>> getAll();
 
     @Query("select * from Product WHERE ownerEmail != :email")
     LiveData<List<Product>> getAll(String email);
@@ -28,6 +26,9 @@ public interface ProductDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Product... products);
+
+    @Query("UPDATE Product SET customerEmail = :newEmail WHERE customerEmail = :oldEmail OR (customerEmail IS NULL AND :oldEmail IS NULL)")
+    void order(String oldEmail, String newEmail);
 
     @Delete
     void delete(Product product);

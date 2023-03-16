@@ -1,9 +1,7 @@
 package com.example.yad2application.ProductModel;
 
-import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -25,8 +23,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -43,6 +39,25 @@ public class ProductFirebaseModel {
         return firebaseUser;
     }
 
+    public void getProductByName(String name, ProductModel.Listener<Product> callback) {
+        db = FirebaseFirestore.getInstance();
+        db.collection(Product.COLLECTION)
+                .whereEqualTo(Product.NAME, name)
+                .limit(1)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful() && task.getResult().size() > 0) {
+                            DocumentSnapshot json = task.getResult().getDocuments().get(0);
+                            Product product = Product.fromJson(json.getData());
+                            callback.onComplete(product);
+                        } else {
+                            callback.onComplete(null);
+                        }
+                    }
+                });
+    }
     public void getAllProductsSince(Long since, ProductModel.Listener<List<Product>> callback){
         db = FirebaseFirestore.getInstance();
         CollectionReference collectionRef = db.collection(Product.COLLECTION);
@@ -134,7 +149,7 @@ public class ProductFirebaseModel {
     }
 
 
-    public void deleteProduct(Product product, ProductModel.Listener<Void> listener) {
+    public void deleteProduct(Product product, OnCompleteListener<Void> listener) {
         db = FirebaseFirestore.getInstance();
         db.collection(Product.COLLECTION).document(product.getName())
                 .delete()

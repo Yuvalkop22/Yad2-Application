@@ -99,7 +99,6 @@ public class AddPostFragment extends Fragment {
 
             }
         });
-
         binding.btnSell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,7 +114,7 @@ public class AddPostFragment extends Fragment {
                     Bitmap bitmap = ((BitmapDrawable) binding.avatarImg.getDrawable()).getBitmap();
                     ProductModel.instance().uploadImage(name.toString(), bitmap, url-> {
                         if (url != null) {
-                            prod.setAvatarUrl(url);
+                            prod.setAvatarUrl(String.valueOf(url));
                         }
                         ProductModel.instance().addProduct(prod,(unused)->{
                             Toast.makeText(getContext(),"POST ADDED", Toast.LENGTH_LONG).show();

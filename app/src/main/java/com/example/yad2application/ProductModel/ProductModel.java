@@ -6,10 +6,13 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.core.os.HandlerCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
@@ -187,11 +190,22 @@ public class ProductModel {
     }
 
     public void deleteProduct(Product product, Listener<Void> listener) {
-        firebaseModel.deleteProduct(product, (Void) -> {
-            refreshAllProducts();
-            listener.onComplete(null);
+        firebaseModel.deleteProduct(product, new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                new Thread(() -> {
+                    localDb.productDao().delete(product);
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(() -> {
+                        listener.onComplete(null);
+                    });
+                }).start();
+            }
         });
     }
+
+
+
 
 
     public void uploadImage(String name, Bitmap bitmap, Listener<String> listener) {
