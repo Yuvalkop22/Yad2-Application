@@ -7,7 +7,7 @@
     tools:context=".ProductsCustomerListFragment">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefresh_asCustomer"
+        android:id="@+id/swipeRefresh_customer"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -16,7 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/productsrecyclerList_asCustomer"
+            android:id="@+id/productsrecyclerListAsCustomer"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -28,12 +28,12 @@
 
 
     <ProgressBar
-        android:id="@+id/progressBar_asCustomer"
+        android:id="@+id/progressBar_customer"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/swipeRefresh_asCustomer"
+        app:layout_constraintEnd_toEndOf="@+id/swipeRefresh_customer"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/swipeRefresh_asCustomer" />
+        app:layout_constraintTop_toTopOf="@+id/swipeRefresh_customer" />
 </androidx.constraintlayout.widget.ConstraintLayout>

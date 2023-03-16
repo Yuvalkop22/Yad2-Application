@@ -12,7 +12,7 @@ import java.util.List;
 @Dao
 public interface ProductDao {
 
-    @Query("select * from Product WHERE ownerEmail != :email")
+    @Query("select * from Product WHERE ownerEmail != :email AND customerEmail != :email")
     LiveData<List<Product>> getAll(String email);
 
     @Query("SELECT * FROM Product WHERE name = :name")

@@ -71,10 +71,10 @@ public class ProductsCustomerListFragment extends Fragment {
         });
 
         ProductModel.instance().EventStudentsListLoadingState.observe(getViewLifecycleOwner(),status->{
-            binding.swipeRefreshAsCustomer.setRefreshing(status == ProductModel.LoadingState.LOADING);
+            binding.swipeRefreshCustomer.setRefreshing(status == ProductModel.LoadingState.LOADING);
         });
 
-        binding.swipeRefreshAsCustomer.setOnRefreshListener(()->{
+        binding.swipeRefreshCustomer.setOnRefreshListener(()->{
             reloadData();
         });
 

@@ -53,8 +53,13 @@ public class ProductPageFragment extends Fragment {
                 binding.btnBuyProdPage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ProductModel.instance().deleteProduct(pr,(unused)->{
-                            Navigation.findNavController(view).navigate(R.id.productsListFragment);
+//                        ProductModel.instance().deleteProduct(pr,(unused)->{
+//                            Navigation.findNavController(view).navigate(R.id.productsListFragment);
+//                        });
+                        String email = ProductModel.instance().getCurrentUser().getEmail();
+                        ProductModel.instance().order(pr.getName(),email,(unused)->{
+                            //Navigation.findNavController(view).navigate(R.id.productsListFragment);
+
                         });
                     }
                 });

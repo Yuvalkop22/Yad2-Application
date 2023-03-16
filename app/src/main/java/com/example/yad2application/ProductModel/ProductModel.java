@@ -2,6 +2,7 @@ package com.example.yad2application.ProductModel;
 
 import android.graphics.Bitmap;
 import android.graphics.Movie;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -89,11 +90,6 @@ public class ProductModel {
             refreshAllProductsCustomer();
         }
         return productsList;
-    }
-
-    public Product getProductByName(String name){
-        Product product = localDb.productDao().getProductByName(name);
-        return product;
     }
 
 
@@ -203,7 +199,19 @@ public class ProductModel {
             }
         });
     }
+    public void order(String oldEmail, String newEmail, Listener<Void> listener) {
+        // Update data in Firestore
+        firebaseModel.order(oldEmail, newEmail, listener);
 
+        // Update data in Room database
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                // Update the data using the @Query annotation
+                localDb.productDao().order(oldEmail, newEmail);
+            }
+        });
+    }
 
 
 
