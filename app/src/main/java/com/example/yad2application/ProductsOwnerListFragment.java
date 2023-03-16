@@ -99,10 +99,10 @@ public class ProductsOwnerListFragment extends Fragment {
         public ProductViewHolder(@NonNull View itemView, ProductRecyclerAdapter.OnItemClickListener listener, List<Product> data) {
             super(itemView);
             this.data = data;
-            nameTv = itemView.findViewById(R.id.studentlistrow_name_tv);
-            idTv = itemView.findViewById(R.id.studentlistrow_id_tv);
-            avatarImage = itemView.findViewById(R.id.studentlistrow_avatar_img);
-            cb = itemView.findViewById(R.id.studentlistrow_cb);
+            nameTv = itemView.findViewById(R.id.productlistrow_name_tv);
+            idTv = itemView.findViewById(R.id.productlistrow_id_tv);
+            avatarImage = itemView.findViewById(R.id.productlistrow_avatar_img);
+            cb = itemView.findViewById(R.id.productlistrow_cb);
             cb.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

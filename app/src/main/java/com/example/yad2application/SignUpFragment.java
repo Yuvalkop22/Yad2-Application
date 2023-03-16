@@ -22,6 +22,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.yad2application.Model.Model;
 import com.example.yad2application.Model.User;
@@ -91,11 +92,11 @@ public class SignUpFragment extends Fragment {
                 String stId = binding.password.getText().toString();
                 Log.v("TAG","name = " + name + "," + "password - " + stId);
                 User st = new User(stId.toString(),name.toString(),"",false);
-                if (isAvatarSelected){
+                if (isAvatarSelected) {
                     binding.avatarImg.setDrawingCacheEnabled(true);
                     binding.avatarImg.buildDrawingCache();
                     Bitmap bitmap = ((BitmapDrawable) binding.avatarImg.getDrawable()).getBitmap();
-                    Model.instance().uploadImage(name.toString(), bitmap, url-> {
+                    Model.instance().uploadImage(name.toString(), bitmap, url -> {
                         if (url != null) {
                             st.setAvatarUrl(url);
                         }
@@ -103,8 +104,11 @@ public class SignUpFragment extends Fragment {
                     Model.instance().addStudent(st,(unused)->{
                         Navigation.findNavController(view).navigate(R.id.logInFragment);
                     });
-
                 }
+                else{
+                    Toast.makeText(getContext(),"Oops.. You need to upload a profile picture", Toast.LENGTH_LONG).show();
+                }
+
             }
         });
 
