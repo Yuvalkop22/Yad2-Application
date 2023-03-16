@@ -1,9 +1,7 @@
 package com.example.yad2application.ProductModel;
 
-import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -17,16 +15,19 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Transaction;
+import com.google.firebase.firestore.WriteBatch;
+import com.google.firebase.firestore.util.Listener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -43,6 +44,25 @@ public class ProductFirebaseModel {
         return firebaseUser;
     }
 
+    public void getProductByName(String name, ProductModel.Listener<Product> callback) {
+        db = FirebaseFirestore.getInstance();
+        db.collection(Product.COLLECTION)
+                .whereEqualTo(Product.NAME, name)
+                .limit(1)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful() && task.getResult().size() > 0) {
+                            DocumentSnapshot json = task.getResult().getDocuments().get(0);
+                            Product product = Product.fromJson(json.getData());
+                            callback.onComplete(product);
+                        } else {
+                            callback.onComplete(null);
+                        }
+                    }
+                });
+    }
     public void getAllProductsSince(Long since, ProductModel.Listener<List<Product>> callback){
         db = FirebaseFirestore.getInstance();
         CollectionReference collectionRef = db.collection(Product.COLLECTION);
@@ -53,8 +73,10 @@ public class ProductFirebaseModel {
         // Query 2: Get all documents where the "owneremail" field is not equal to the current user's email
         Query query2 = collectionRef.whereNotEqualTo(Product.OWNEREMAIL,getCurrentUser().getEmail());
 
+        Query query3 = collectionRef.whereNotEqualTo(Product.CUSTOMEREMAIL,getCurrentUser().getEmail());
+
         // Merge the results of both queries
-        Tasks.whenAllComplete(query1.get(), query2.get())
+        Tasks.whenAllComplete(query1.get(), query2.get(),query3.get())
                 .addOnCompleteListener(new OnCompleteListener<List<Task<?>>>() {
                     @Override
                     public void onComplete(@NonNull Task<List<Task<?>>> task) {
@@ -133,8 +155,36 @@ public class ProductFirebaseModel {
                 });
     }
 
+    public void order(String name, String newEmail, ProductModel.Listener<Void> listener) {
+        db = FirebaseFirestore.getInstance();
+        CollectionReference productsRef = db.collection(Product.COLLECTION);
 
-    public void deleteProduct(Product product, ProductModel.Listener<Void> listener) {
+        productsRef.whereEqualTo(Product.NAME, name)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        WriteBatch batch = db.batch();
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            batch.update(doc.getReference(), Product.CUSTOMEREMAIL, newEmail);
+                        }
+                        batch.commit()
+                                .addOnCompleteListener(commitTask -> {
+                                    if (commitTask.isSuccessful()) {
+                                        listener.onComplete(null);
+                                    } else {
+                                        Log.e("TAG", "Error updating documents: ", commitTask.getException());
+                                    }
+                                });
+                    } else {
+                        Log.e("TAG", "Error getting documents: ", task.getException());
+                    }
+                });
+    }
+
+
+
+
+    public void deleteProduct(Product product, OnCompleteListener<Void> listener) {
         db = FirebaseFirestore.getInstance();
         db.collection(Product.COLLECTION).document(product.getName())
                 .delete()

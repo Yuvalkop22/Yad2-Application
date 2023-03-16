@@ -2,14 +2,18 @@ package com.example.yad2application.ProductModel;
 
 import android.graphics.Bitmap;
 import android.graphics.Movie;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.core.os.HandlerCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
@@ -86,11 +90,6 @@ public class ProductModel {
             refreshAllProductsCustomer();
         }
         return productsList;
-    }
-
-    public Product getProductByName(String name){
-        Product product = localDb.productDao().getProductByName(name);
-        return product;
     }
 
 
@@ -187,11 +186,34 @@ public class ProductModel {
     }
 
     public void deleteProduct(Product product, Listener<Void> listener) {
-        firebaseModel.deleteProduct(product, (Void) -> {
-            refreshAllProducts();
-            listener.onComplete(null);
+        firebaseModel.deleteProduct(product, new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                new Thread(() -> {
+                    localDb.productDao().delete(product);
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(() -> {
+                        listener.onComplete(null);
+                    });
+                }).start();
+            }
         });
     }
+    public void order(String oldEmail, String newEmail, Listener<Void> listener) {
+        // Update data in Firestore
+        firebaseModel.order(oldEmail, newEmail, listener);
+
+        // Update data in Room database
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                // Update the data using the @Query annotation
+                localDb.productDao().order(oldEmail, newEmail);
+            }
+        });
+    }
+
+
 
 
     public void uploadImage(String name, Bitmap bitmap, Listener<String> listener) {
