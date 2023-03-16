@@ -11,11 +11,12 @@ import com.example.yad2application.MyApplication;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FieldValue;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 @Entity
-public class Product {
+public class Product{
     @PrimaryKey
     @NonNull
     public String name="";
@@ -107,7 +108,7 @@ public class Product {
         return customerEmail;
     }
 
-    private String getPrice() {
+    public String getPrice() {
         return this.price;
     }
 

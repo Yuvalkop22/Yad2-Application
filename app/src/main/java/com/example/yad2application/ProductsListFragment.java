@@ -54,10 +54,16 @@ public class ProductsListFragment extends Fragment {
             @Override
             public void onItemClick(int pos) {
                 Log.d("TAG", "Row was clicked " + pos);
+                Product pr = viewModel.getData().getValue().get(pos);
                 Bundle bundle = new Bundle();
-                bundle.putInt("pos",pos); // Put anything what you want
-                getParentFragmentManager().setFragmentResult("posClicked",bundle);
-                Log.d("TAG", pos + "");
+                bundle.putString("name", pr.getName());
+                bundle.putString("category", pr.getCategory());
+                bundle.putString("price", pr.getPrice());
+                bundle.putString("description", pr.getDescription());
+                bundle.putString("imgURL", pr.getAvatarUrl());
+//               bundle.putInt("pos",pos); // Put anything what you want
+                getParentFragmentManager().setFragmentResult("productDetail",bundle);
+                Log.d("TAG", "pos clicked: " + pos + " name: " + pr.getName() );
                 ProductPageFragment productPageFragment = new ProductPageFragment();
                 productPageFragment.setArguments(bundle);
 
@@ -99,10 +105,10 @@ public class ProductsListFragment extends Fragment {
         public ProductViewHolder(@NonNull View itemView, ProductRecyclerAdapter.OnItemClickListener listener, List<Product> data) {
             super(itemView);
             this.data = data;
-            nameTv = itemView.findViewById(R.id.studentlistrow_name_tv);
-            idTv = itemView.findViewById(R.id.studentlistrow_id_tv);
-            avatarImage = itemView.findViewById(R.id.studentlistrow_avatar_img);
-            cb = itemView.findViewById(R.id.studentlistrow_cb);
+            nameTv = itemView.findViewById(R.id.productlistrow_name_tv);
+            idTv = itemView.findViewById(R.id.productlistrow_id_tv);
+            avatarImage = itemView.findViewById(R.id.productlistrow_avatar_img);
+            cb = itemView.findViewById(R.id.productlistrow_cb);
             cb.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
