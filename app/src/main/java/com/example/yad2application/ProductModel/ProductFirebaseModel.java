@@ -59,6 +59,30 @@ public class ProductFirebaseModel {
                 });
     }
 
+    public void getAllProductsOwnerSince(Long since, ProductModel.Listener<List<Product>> callback){
+        db  = FirebaseFirestore.getInstance();
+        db.collection(Product.COLLECTION)
+                .whereGreaterThanOrEqualTo(Product.LAST_UPDATED, new Timestamp(since,0))
+                .whereEqualTo(Product.OWNEREMAIL,getCurrentUser().getEmail())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        List<Product> list = new LinkedList<>();
+                        if (task.isSuccessful()){
+                            QuerySnapshot jsonsList = task.getResult();
+                            for (DocumentSnapshot json: jsonsList){
+                                Product st = Product.fromJson(json.getData());
+                                list.add(st);
+                            }
+                        }
+                        callback.onComplete(list);
+                    }
+                });
+    }
+
+
+
 //    public void getAllProductSearch(String search, ProductModel.Listener<List<Product>> callback){
 //        db  = FirebaseFirestore.getInstance();
 //        db.collection(Product.COLLECTION)

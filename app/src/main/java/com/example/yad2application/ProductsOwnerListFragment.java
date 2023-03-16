@@ -29,12 +29,12 @@ import java.util.List;
 public class ProductsOwnerListFragment extends Fragment {
     FragmentProductsOwnerListBinding binding;
     ProductRecyclerAdapter adapter;
-    ProductsListFragmentViewModel viewModel;
+    ProductsListOwnerFragmentViewModel viewModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(this).get(ProductsListFragmentViewModel.class);
+        viewModel = new ViewModelProvider(this).get(ProductsListOwnerFragmentViewModel.class);
     }
 
     Bundle bundle = new Bundle();
@@ -47,7 +47,6 @@ public class ProductsOwnerListFragment extends Fragment {
 
         binding.productsrecyclerListOwner.setHasFixedSize(true);
         binding.productsrecyclerListOwner.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = null;
         adapter = new ProductRecyclerAdapter(getLayoutInflater(),viewModel.getDataOwner().getValue());
         binding.productsrecyclerListOwner.setAdapter(adapter);
 
@@ -84,12 +83,12 @@ public class ProductsOwnerListFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        viewModel = new ViewModelProvider(this).get(ProductsListFragmentViewModel.class);
+        viewModel = new ViewModelProvider(this).get(ProductsListOwnerFragmentViewModel.class);
     }
 
     void reloadData(){
 //        binding.progressBar.setVisibility(View.VISIBLE);
-        ProductModel.instance().refreshAllProducts();
+        ProductModel.instance().refreshAllProductsOwner();
     }
     static class ProductViewHolder extends RecyclerView.ViewHolder{
         TextView nameTv;
