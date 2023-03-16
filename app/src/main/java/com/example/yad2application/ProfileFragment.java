@@ -77,6 +77,13 @@ public class ProfileFragment extends Fragment {
 //        task.execute();
 
 
+        binding.btnAllOwner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(view).navigate(R.id.productsOwnerListFragment);
+            }
+        });
+
         FragmentActivity parentActivity = getActivity();
         parentActivity.addMenuProvider(new MenuProvider() {
             @Override
