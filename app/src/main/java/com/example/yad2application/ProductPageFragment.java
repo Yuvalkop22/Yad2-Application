@@ -21,7 +21,6 @@ import com.squareup.picasso.Picasso;
 
 public class ProductPageFragment extends Fragment {
     private FragmentProductPageBinding binding;
-    ProductsListFragmentViewModel viewModel;
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
@@ -32,27 +31,21 @@ public class ProductPageFragment extends Fragment {
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
-        viewModel = new ViewModelProvider(this).get(ProductsListFragmentViewModel.class);
-
         setHasOptionsMenu(true);
         binding = FragmentProductPageBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
-        getParentFragmentManager().setFragmentResultListener("posClicked", this, new FragmentResultListener() {
+        getParentFragmentManager().setFragmentResultListener("productDetail", this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                int pos = result.getInt("pos");
-                Log.d("TAG", pos + "");
+                Log.d("TAG", "In product page -> name: " + result.getString("name"));
 
-                Product product = viewModel.getData().getValue().get(pos);
-                
-                binding.textProductNamePreview.setText(viewModel.getData().getValue().get(pos).getName());
-                binding.textCategoryPreview.setText(viewModel.getData().getValue().get(pos).getCategory());
-                binding.textPricePreview.setText(viewModel.getData().getValue().get(pos).price);
-                binding.textDescriptionPreview.setText(viewModel.getData().getValue().get(pos).getDescription());
-                Picasso.get().load(viewModel.getData().getValue().get(pos).getAvatarUrl()).into(binding.productImg);
+                binding.textProductNamePreview.setText(result.getString("name"));
+                binding.textCategoryPreview.setText(result.getString("category"));
+                binding.textPricePreview.setText(result.getString("price"));
+                binding.textDescriptionPreview.setText(result.getString("description"));
+                Picasso.get().load(result.getString("imgURL")).into(binding.productImg);
 
-                Log.e("TAG",product.ownerEmail);
             }
         });
 
