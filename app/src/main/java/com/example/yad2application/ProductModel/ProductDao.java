@@ -12,7 +12,7 @@ import java.util.List;
 @Dao
 public interface ProductDao {
 
-    @Query("select * from Product WHERE ownerEmail != :email AND customerEmail != :email")
+    @Query("select * from Product WHERE ownerEmail != :email AND customerEmail IS NULL")
     LiveData<List<Product>> getAll(String email);
 
     @Query("SELECT * FROM Product WHERE name = :name")
@@ -27,8 +27,10 @@ public interface ProductDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Product... products);
 
-    @Query("UPDATE Product SET customerEmail = :newEmail WHERE customerEmail = :oldEmail OR (customerEmail IS NULL AND :oldEmail IS NULL)")
-    void order(String oldEmail, String newEmail);
+    @Query("UPDATE Product SET customerEmail = :newEmail WHERE customerEmail IS NULL AND name = :pName")
+    void order(String pName, String newEmail);
+
+
 
     @Delete
     void delete(Product product);

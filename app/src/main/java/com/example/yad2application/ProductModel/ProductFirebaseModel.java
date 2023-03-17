@@ -64,34 +64,41 @@ public class ProductFirebaseModel {
                 });
     }
     public void getAllProductsSince(Long since, ProductModel.Listener<List<Product>> callback){
+        // Get an instance of the FirebaseFirestore database
         db = FirebaseFirestore.getInstance();
+        // Get a reference to the collection of products
         CollectionReference collectionRef = db.collection(Product.COLLECTION);
 
-        // Query 1: Get all documents where the "lastUpdated" field is greater than the provided timestamp
+        // Query 1: Get all documents where the "lastUpdated" field is greater than or equal to the provided timestamp
         Query query1 = collectionRef.whereGreaterThanOrEqualTo(Product.LAST_UPDATED, new Timestamp(since,0));
 
         // Query 2: Get all documents where the "owneremail" field is not equal to the current user's email
         Query query2 = collectionRef.whereNotEqualTo(Product.OWNEREMAIL,getCurrentUser().getEmail());
 
-        Query query3 = collectionRef.whereNotEqualTo(Product.CUSTOMEREMAIL,getCurrentUser().getEmail());
+        // Query 3: Get all documents where the "customeremail" field is null
+        Query query3 = collectionRef.whereNotEqualTo(Product.CUSTOMEREMAIL,null);
 
-        // Merge the results of both queries
-        Tasks.whenAllComplete(query1.get(), query2.get(),query3.get())
+        // Execute all three queries in parallel and merge their results
+        Tasks.whenAllComplete(query1.get(), query2.get(), query3.get())
                 .addOnCompleteListener(new OnCompleteListener<List<Task<?>>>() {
                     @Override
                     public void onComplete(@NonNull Task<List<Task<?>>> task) {
                         List<Product> list = new LinkedList<>();
                         if (task.isSuccessful()){
+                            // Iterate through the results of each sub-task
                             for (Task<?> subTask : task.getResult()) {
+                                // If the sub-task succeeded, iterate through its results
                                 if (subTask.isSuccessful()) {
                                     QuerySnapshot querySnapshot = (QuerySnapshot) subTask.getResult();
                                     for (DocumentSnapshot documentSnapshot : querySnapshot) {
-                                        Product st = Product.fromJson(documentSnapshot.getData());
-                                        list.add(st);
+                                        // Convert each document snapshot to a Product object and add it to the list
+                                        Product product = Product.fromJson(documentSnapshot.getData());
+                                        list.add(product);
                                     }
                                 }
                             }
                         }
+                        // Invoke the callback with the list of products
                         callback.onComplete(list);
                     }
                 });

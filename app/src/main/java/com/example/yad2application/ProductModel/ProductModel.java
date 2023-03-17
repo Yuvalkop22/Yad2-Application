@@ -122,7 +122,7 @@ public class ProductModel {
     }
 
     public void refreshAllProductsCustomer(){
-        EventStudentsListLoadingState.setValue(LoadingState.LOADING);
+        //EventStudentsListLoadingState.setValue(LoadingState.LOADING);
         // get local last update
         Long localLastUpdate = Product.getLocalLastUpdate();
         // get all updated recorde from firebase since local last update
@@ -144,7 +144,7 @@ public class ProductModel {
                 }
                 // update local last update
                 Product.setLocalLastUpdate(time);
-                EventStudentsListLoadingState.postValue(LoadingState.NOT_LOADING);
+//                EventStudentsListLoadingState.postValue(LoadingState.NOT_LOADING);
             });
         });
     }
@@ -199,16 +199,14 @@ public class ProductModel {
             }
         });
     }
-    public void order(String oldEmail, String newEmail, Listener<Void> listener) {
+    public void order(String name, String newEmail, Listener<Void> listener) {
         // Update data in Firestore
-        firebaseModel.order(oldEmail, newEmail, listener);
-
-        // Update data in Room database
-        AsyncTask.execute(new Runnable() {
+        firebaseModel.order(name, newEmail, new Listener<Void>() {
             @Override
-            public void run() {
-                // Update the data using the @Query annotation
-                localDb.productDao().order(oldEmail, newEmail);
+            public void onComplete(Void data) {
+                executor.execute(()->{
+                    localDb.productDao().order(name,newEmail);
+                });
             }
         });
     }
