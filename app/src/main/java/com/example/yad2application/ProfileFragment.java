@@ -37,33 +37,6 @@ import java.util.concurrent.ExecutionException;
 public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
-
-    // Create a static AsyncTask class to retrieve the product category from the database
-//    private static class ProductCategoryTask extends AsyncTask<Void, Void, String> {
-//        private WeakReference<ProfileFragment> activityRef;
-//
-//        public ProductCategoryTask(ProfileFragment activity) {
-//            activityRef = new WeakReference<>(activity);
-//        }
-//
-//        @Override
-//        protected String doInBackground(Void... voids) {
-//            // Retrieve the product category from the database
-//            return ProductModel.instance().getProductByName("yuv").getCategory();
-//        }
-//
-//        @Override
-//        protected void onPostExecute(String category) {
-//            // Get a reference to the activity (if it still exists)
-//            ProfileFragment activity = activityRef.get();
-//            if (activity == null || activity.isRemoving()) {
-//                return;
-//            }
-//
-//            // Set the product category on the UI thread
-//            activity.binding.userEmailTv.setText(category);
-//        }
-//    }
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public View onCreateView(
