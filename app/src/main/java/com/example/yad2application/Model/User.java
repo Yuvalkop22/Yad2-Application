@@ -8,45 +8,45 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import com.example.yad2application.MyApplication;
+import com.example.yad2application.ProductModel.Product;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FieldValue;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Entity
 public class User {
     @PrimaryKey
     @NonNull
-    public String id="";
-    public String name="";
+    public String email="";
+    public String password = "";
     public String avatarUrl="";
-    public Boolean cb=false;
     public Long lastUpdated;
 
     public User(){
     }
-    public User(String id, String name, String avatarUrl, Boolean cb) {
-        this.name = name;
-        this.id = id;
+
+    public User(@NonNull String email, String password, String avatarUrl) {
+        this.email = email;
+        this.password = password;
         this.avatarUrl = avatarUrl;
-        this.cb = cb;
     }
 
-    static final String NAME = "name";
-    static final String ID = "id";
+    static final String EMAIL = "email";
+    static final String PASSWORD = "password";
     static final String AVATAR = "avatar";
-    static final String CB = "cb";
-    static final String COLLECTION = "students";
+    static final String COLLECTION = "users";
     static final String LAST_UPDATED = "lastUpdated";
     static final String LOCAL_LAST_UPDATED = "students_local_last_update";
 
     public static User fromJson(Map<String,Object> json){
-        String id = (String)json.get(ID);
-        String name = (String)json.get(NAME);
+        String email = (String)json.get(EMAIL);
+        String password = (String) json.get(PASSWORD);
         String avatar = (String)json.get(AVATAR);
-        Boolean cb = (Boolean) json.get(CB);
-        User st = new User(id,name,avatar,cb);
+
+        User st = new User(email,password,avatar);
         try{
             Timestamp time = (Timestamp) json.get(LAST_UPDATED);
             st.setLastUpdated(time.getSeconds());
@@ -70,46 +70,31 @@ public class User {
 
     public Map<String,Object> toJson(){
         Map<String, Object> json = new HashMap<>();
-        json.put(ID, getId());
-        json.put(NAME, getName());
+        json.put(EMAIL, getEmail());
+        json.put(PASSWORD,getPassword());
         json.put(AVATAR, getAvatarUrl());
-        json.put(CB, getCb());
         json.put(LAST_UPDATED, FieldValue.serverTimestamp());
         return json;
     }
 
-    public void setId(@NonNull String id) {
-        this.id = id;
-    }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getPassword() {
+        return password;
     }
 
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
     }
 
-    public void setCb(Boolean cb) {
-        this.cb = cb;
-    }
 
-    @NonNull
-    public String getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
+    public String getEmail() {
+        return email;
     }
 
     public String getAvatarUrl() {
         return avatarUrl;
     }
 
-    public Boolean getCb() {
-        return cb;
-    }
 
     public Long getLastUpdated() {
         return lastUpdated;

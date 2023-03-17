@@ -88,21 +88,20 @@ public class SignUpFragment extends Fragment {
         binding.btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String name = binding.username.getText().toString();
-                String stId = binding.password.getText().toString();
-                Log.v("TAG","name = " + name + "," + "password - " + stId);
-                User st = new User(stId.toString(),name.toString(),"",false);
+                String email = binding.email.getText().toString();
+                String password = binding.password.getText().toString();
+                User user = new User(email,password,"");
                 if (isAvatarSelected) {
                     binding.avatarImg.setDrawingCacheEnabled(true);
                     binding.avatarImg.buildDrawingCache();
                     Bitmap bitmap = ((BitmapDrawable) binding.avatarImg.getDrawable()).getBitmap();
-                    Model.instance().uploadImage(name.toString(), bitmap, url -> {
+                    Model.instance().uploadImage(email, bitmap, url -> {
                         if (url != null) {
-                            st.setAvatarUrl(url);
+                            user.setAvatarUrl(url);
+                            Model.instance().addUser(user,(unused)->{
+                                Navigation.findNavController(view).navigate(R.id.signInFragment);
+                            });
                         }
-                    });
-                    Model.instance().addStudent(st,(unused)->{
-                        Navigation.findNavController(view).navigate(R.id.logInFragment);
                     });
                 }
                 else{

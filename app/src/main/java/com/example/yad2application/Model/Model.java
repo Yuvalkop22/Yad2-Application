@@ -21,7 +21,7 @@ public class Model {
     private Executor executor = Executors.newSingleThreadExecutor();
     private Handler mainHandler = HandlerCompat.createAsync(Looper.getMainLooper());
     private FirebaseModel firebaseModel = new FirebaseModel();
-    //AppLocalDbRepository localDb = AppLocalDb.getAppDb();
+    AppLocalDbRepository localDb = AppLocalDb.getAppDb();
 
     public static Model instance(){
         return _instance;
@@ -44,26 +44,26 @@ public class Model {
     private LiveData<List<User>> studentList;
     public LiveData<List<User>> getAllStudents() {
         if(studentList == null){
-            //studentList = localDb.studentDao().getAll();
-            refreshAllStudents();
+            studentList = localDb.userDao().getAll();
+            refreshAllUsers();
         }
         return studentList;
     }
 
-    public void refreshAllStudents(){
+    public void refreshAllUsers(){
         EventStudentsListLoadingState.setValue(LoadingState.LOADING);
         // get local last update
         Long localLastUpdate = User.getLocalLastUpdate();
         // get all updated recorde from firebase since local last update
-        firebaseModel.getAllStudentsSince(localLastUpdate,list->{
+        firebaseModel.getAllUsersSince(localLastUpdate,list->{
             executor.execute(()->{
                 Log.d("TAG", " firebase return : " + list.size());
                 Long time = localLastUpdate;
-                for(User st:list){
+                for(User user:list){
                     // insert new records into ROOM
-                    //localDb.studentDao().insertAll(st);
-                    if (time < st.getLastUpdated()){
-                        time = st.getLastUpdated();
+                    localDb.userDao().insertAll(user);
+                    if (time < user.getLastUpdated()){
+                        time = user.getLastUpdated();
                     }
                 }
                 try {
@@ -78,9 +78,9 @@ public class Model {
         });
     }
 
-    public void addStudent(User st, Listener<Void> listener){
-        firebaseModel.addStudent(st,(Void)->{
-            //refreshAllStudents();
+    public void addUser(User user, Listener<Void> listener){
+        firebaseModel.addUser(user,(Void)->{
+            refreshAllUsers();
             listener.onComplete(null);
         });
     }

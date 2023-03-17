@@ -33,7 +33,7 @@ public class FirstFragment extends Fragment {
         binding.btnLoginFirst.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Navigation.findNavController(view).navigate(R.id.logInFragment);
+                Navigation.findNavController(view).navigate(R.id.signInFragment);
             }
         });
 

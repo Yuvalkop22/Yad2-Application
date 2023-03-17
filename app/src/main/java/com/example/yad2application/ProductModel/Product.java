@@ -19,6 +19,7 @@ import java.util.Map;
 public class Product implements Serializable{
     @PrimaryKey
     @NonNull
+//    public String id="";
     public String name="";
     public String avatarUrl="";
     public String category="";
@@ -42,7 +43,7 @@ public class Product implements Serializable{
         this.customerEmail = customerEmail;
         this.cb = cb;
     }
-
+//    static final String ID = "id";
     static final String NAME = "name";
     static final String CATEGORY = "category";
     static final String DESCRIPTION = "description";
@@ -100,6 +101,8 @@ public class Product implements Serializable{
         return json;
     }
 
+
+
     public String getOwnerEmail() {
         return ownerEmail;
     }
@@ -112,7 +115,7 @@ public class Product implements Serializable{
         return this.price;
     }
 
-
+    @NonNull
     public void setName(String name) {
         this.name = name;
     }

@@ -7,6 +7,8 @@ import android.util.Patterns;
 
 import androidx.annotation.NonNull;
 
+import com.example.yad2application.ProductModel.Product;
+import com.example.yad2application.ProductModel.ProductModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -44,7 +46,7 @@ public class FirebaseModel {
         firebaseUser = auth.getCurrentUser();
         return firebaseUser;
     }
-    public void getAllStudentsSince(Long since, Model.Listener<List<User>> callback){
+    public void getAllUsersSince(Long since, Model.Listener<List<User>> callback){
         db.collection(User.COLLECTION)
                 .whereGreaterThanOrEqualTo(User.LAST_UPDATED, new Timestamp(since,0))
                 .get()
@@ -64,75 +66,33 @@ public class FirebaseModel {
         });
     }
 
-    public void signInUser(User st, Model.Listener<Void> listener) {
+    public void signInUser(User user, Model.Listener<Void> listener) {
         auth = FirebaseAuth.getInstance();
         firebaseUser = auth.getCurrentUser();
-        if (Patterns.EMAIL_ADDRESS.matcher(st.name).matches()) {
-            // The email address is valid, create user in Firebase authentication
-            auth.signInWithEmailAndPassword(st.name.toString(), st.id.toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()) {
-                        // User created successfully
-                        listener.onComplete(null);
-                    } else {
-                        // Failed to create user, print the exception with log
-                        Exception exception = task.getException();
-                        Log.e("TAG", "Error creating user", exception);
-                    }
-                }
-            });
-        } else {
-            // The email address is invalid, show an error message to the user
-            Log.e("TAG", "The email address is invalid");
-        }
-
+        auth.signInWithEmailAndPassword(user.getEmail(),user.getPassword()).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+            @Override
+            public void onSuccess(AuthResult authResult) {
+                listener.onComplete(null);
+            }
+        });
     }
-        public void addStudent(User st, Model.Listener<Void> listener) {
-        db = FirebaseFirestore.getInstance();
-        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setPersistenceEnabled(true)
-                .build();
-        db.setFirestoreSettings(settings);
-        Map<String,Object> user = new HashMap<>();
-        user.put("email",st.name);
-        user.put("password",st.id);
-        db.collection("Users").add(user)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d("TAG", "DocumentSnapshot added with ID: " + documentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("TAG", "Error adding document", e);
-                        // Handle the error and provide feedback to the user
-                    }
-                });
 
+    public void addUser(User user, Model.Listener<Void> listener) {
+        db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
-        firebaseUser = auth.getCurrentUser();
-        if (Patterns.EMAIL_ADDRESS.matcher(st.name).matches()) {
-            // The email address is valid, create user in Firebase authentication
-            auth.createUserWithEmailAndPassword(st.name.toString(), st.id.toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()) {
-                        // User created successfully
-                        listener.onComplete(null);
-                    } else {
-                        // Failed to create user, print the exception with log
-                        Exception exception = task.getException();
-                        Log.e("TAG", "Error creating user", exception);
-                    }
-                }
-            });
-        } else {
-            // The email address is invalid, show an error message to the user
-            Log.e("TAG","The email address is invalid");
-        }
+        auth.createUserWithEmailAndPassword(user.getEmail(),user.getPassword()).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+            @Override
+            public void onSuccess(AuthResult authResult) {
+                db.collection(User.COLLECTION).document(user.getEmail()).set(user.toJson())
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                listener.onComplete(null);
+                            }
+                        });
+            }
+        });
+
     }
 
     public void uploadImage(String name, Bitmap bitmap, Model.Listener<String> listener){
