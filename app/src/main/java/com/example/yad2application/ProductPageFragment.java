@@ -58,7 +58,7 @@ public class ProductPageFragment extends Fragment {
 //                        });
                         String email = ProductModel.instance().getCurrentUser().getEmail();
                         ProductModel.instance().order(pr.getName(),email,(unused)->{
-                            //Navigation.findNavController(view).navigate(R.id.productsListFragment);
+                            Navigation.findNavController(view).navigate(R.id.productsListFragment);
 
                         });
                     }

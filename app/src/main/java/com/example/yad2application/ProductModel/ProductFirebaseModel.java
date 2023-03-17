@@ -73,10 +73,9 @@ public class ProductFirebaseModel {
         // Query 2: Get all documents where the "owneremail" field is not equal to the current user's email
         Query query2 = collectionRef.whereNotEqualTo(Product.OWNEREMAIL,getCurrentUser().getEmail());
 
-        Query query3 = collectionRef.whereNotEqualTo(Product.CUSTOMEREMAIL,getCurrentUser().getEmail());
 
         // Merge the results of both queries
-        Tasks.whenAllComplete(query1.get(), query2.get(),query3.get())
+        Tasks.whenAllComplete(query1.get(), query2.get())
                 .addOnCompleteListener(new OnCompleteListener<List<Task<?>>>() {
                     @Override
                     public void onComplete(@NonNull Task<List<Task<?>>> task) {

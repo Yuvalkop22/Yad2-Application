@@ -28,6 +28,7 @@
 
 
     <ProgressBar
+        android:visibility="gone"
         android:id="@+id/progressBar_customer"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"

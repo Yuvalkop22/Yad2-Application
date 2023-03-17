@@ -64,7 +64,7 @@ public class ProductsCustomerListFragment extends Fragment {
                 Navigation.findNavController(view).navigate(R.id.productPageFragment);
             }
         });
-        binding.productsrecyclerListAsCustomer.setVisibility(View.GONE);
+//        binding.productsrecyclerListAsCustomer.setVisibility(View.GONE);
 
         viewModel.getDataAsCustomer().observe(getViewLifecycleOwner(),list->{
             adapter.setData(list);
