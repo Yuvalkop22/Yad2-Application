@@ -95,7 +95,7 @@ public class SignUpFragment extends Fragment {
                     binding.avatarImg.setDrawingCacheEnabled(true);
                     binding.avatarImg.buildDrawingCache();
                     Bitmap bitmap = ((BitmapDrawable) binding.avatarImg.getDrawable()).getBitmap();
-                    Model.instance().uploadImage(email, bitmap, url -> {
+                    Model.instance().uploadImageUser(email, bitmap, url -> {
                         if (url != null) {
                             user.setAvatarUrl(url);
                             Model.instance().addUser(user,(unused)->{

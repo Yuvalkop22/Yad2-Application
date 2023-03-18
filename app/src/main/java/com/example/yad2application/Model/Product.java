@@ -1,4 +1,4 @@
-package com.example.yad2application.ProductModel;
+package com.example.yad2application.Model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -14,12 +14,13 @@ import com.google.firebase.firestore.FieldValue;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
-@Entity
+@Entity(tableName = "Product")
 public class Product implements Serializable{
     @PrimaryKey
     @NonNull
-//    public String id="";
+    public String productId="";
     public String name="";
     public String avatarUrl="";
     public String category="";
@@ -33,7 +34,7 @@ public class Product implements Serializable{
     public Product(){
     }
 
-    public Product(@NonNull String name, String avatarUrl, String category, String price, String description, String ownerEmail, String customerEmail, Boolean cb) {
+    public Product(String name, String avatarUrl, String category, String price, String description, String ownerEmail, String customerEmail, Boolean cb) {
         this.name = name;
         this.avatarUrl = avatarUrl;
         this.category = category;
@@ -42,8 +43,11 @@ public class Product implements Serializable{
         this.ownerEmail = ownerEmail;
         this.customerEmail = customerEmail;
         this.cb = cb;
+        this.productId = UUID.randomUUID().toString();
+
     }
 //    static final String ID = "id";
+    static final String PRODUCTID = "productid";
     static final String NAME = "name";
     static final String CATEGORY = "category";
     static final String DESCRIPTION = "description";
@@ -57,6 +61,7 @@ public class Product implements Serializable{
     static final String LOCAL_LAST_UPDATED = "products_local_last_update";
 
     public static Product fromJson(Map<String,Object> json){
+        String productid = (String)json.get(PRODUCTID);
         String name = (String)json.get(NAME);
         String category = (String)json.get(CATEGORY);
         String price= (String) json.get(PRICE);
@@ -89,6 +94,7 @@ public class Product implements Serializable{
 
     public Map<String,Object> toJson(){
         Map<String, Object> json = new HashMap<>();
+        json.put(PRODUCTID,getProductId());
         json.put(NAME, getName());
         json.put(CATEGORY,getCategory());
         json.put(PRICE,getPrice());
@@ -102,6 +108,10 @@ public class Product implements Serializable{
     }
 
 
+    @NonNull
+    public String getProductId() {
+        return productId;
+    }
 
     public String getOwnerEmail() {
         return ownerEmail;

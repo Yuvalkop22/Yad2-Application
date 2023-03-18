@@ -5,11 +5,10 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 import com.example.yad2application.MyApplication;
-import com.example.yad2application.ProductModel.Product;
-import com.example.yad2application.ProductModel.ProductDao;
 
-@Database(entities = {User.class}, version = 21)
+@Database(entities = {Product.class,User.class}, version = 25)
 abstract class AppLocalDbRepository extends RoomDatabase {
+    public abstract ProductDao productDao();
     public abstract UserDao userDao();
 }
 public class AppLocalDb{

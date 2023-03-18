@@ -19,8 +19,8 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.yad2application.ProductModel.Product;
-import com.example.yad2application.ProductModel.ProductModel;
+import com.example.yad2application.Model.Model;
+import com.example.yad2application.Model.Product;
 import com.example.yad2application.databinding.FragmentProductsListBinding;
 import com.squareup.picasso.Picasso;
 
@@ -72,8 +72,8 @@ public class ProductsListFragment extends Fragment {
             adapter.setData(list);
         });
 
-        ProductModel.instance().EventStudentsListLoadingState.observe(getViewLifecycleOwner(),status->{
-            binding.swipeRefresh.setRefreshing(status == ProductModel.LoadingState.LOADING);
+        Model.instance().EventStudentsListLoadingState.observe(getViewLifecycleOwner(),status->{
+            binding.swipeRefresh.setRefreshing(status == Model.LoadingState.LOADING);
         });
 
         binding.swipeRefresh.setOnRefreshListener(()->{
@@ -90,7 +90,7 @@ public class ProductsListFragment extends Fragment {
 
     void reloadData(){
 //        binding.progressBar.setVisibility(View.VISIBLE);
-        ProductModel.instance().refreshAllProducts();
+        Model.instance().refreshAllProducts();
     }
     static class ProductViewHolder extends RecyclerView.ViewHolder{
         TextView nameTv;

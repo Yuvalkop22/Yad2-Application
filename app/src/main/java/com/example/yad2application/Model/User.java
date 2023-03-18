@@ -8,7 +8,6 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import com.example.yad2application.MyApplication;
-import com.example.yad2application.ProductModel.Product;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FieldValue;
 

@@ -5,10 +5,13 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.core.os.HandlerCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
@@ -41,13 +44,14 @@ public class Model {
     final public MutableLiveData<LoadingState> EventStudentsListLoadingState = new MutableLiveData<LoadingState>(LoadingState.NOT_LOADING);
 
 
-    private LiveData<List<User>> studentList;
-    public LiveData<List<User>> getAllStudents() {
-        if(studentList == null){
-            studentList = localDb.userDao().getAll();
+
+    private LiveData<List<User>> usersList;
+    public LiveData<List<User>> getAllUsers() {
+        if(usersList == null){
+            usersList = localDb.userDao().getAll();
             refreshAllUsers();
         }
-        return studentList;
+        return usersList;
     }
 
     public void refreshAllUsers(){
@@ -94,8 +98,177 @@ public class Model {
         });
     }
 
-    public void uploadImage(String name, Bitmap bitmap,Listener<String> listener) {
-        firebaseModel.uploadImage(name,bitmap,listener);
+    private LiveData<List<Product>> productsList;
+    public LiveData<List<Product>> getAllProducts() {
+        if(productsList == null){
+            productsList = localDb.productDao().getAll();
+            refreshAllProducts();
+        }
+        if (productsList != null){
+            productsList = null;
+            productsList =localDb.productDao().getAll();
+            refreshAllProducts();
+        }
+        return productsList;
+    }
+    public LiveData<List<Product>> getAllProductsOwner(String email) {
+        if(productsList == null){
+            productsList = localDb.productDao().getAllByOwnerEmail(email);
+            refreshAllProductsOwner();
+        }
+        if (productsList != null){
+            productsList = null;
+            productsList =localDb.productDao().getAllByOwnerEmail(email);
+            refreshAllProductsOwner();
+        }
+        return productsList;
     }
 
+    public LiveData<List<Product>> getAllProductsCustomer(String email) {
+        if(productsList == null){
+            productsList = localDb.productDao().getAllAsCustomerEmail(email);
+            refreshAllProductsCustomer();
+        }
+        if (productsList != null){
+            productsList = null;
+            productsList =localDb.productDao().getAllAsCustomerEmail(email);
+            refreshAllProductsCustomer();
+        }
+        return productsList;
+    }
+
+
+    public void refreshAllProductsOwner(){
+        EventStudentsListLoadingState.setValue(LoadingState.LOADING);
+        // get local last update
+        Long localLastUpdate = Product.getLocalLastUpdate();
+        // get all updated recorde from firebase since local last update
+        firebaseModel.getAllProductsOwnerSince(localLastUpdate,list->{
+            executor.execute(()->{
+                Log.d("TAG", " firebase return : " + list.size());
+                Long time = localLastUpdate;
+                for(Product prod:list){
+                    // insert new records into ROOM
+                    localDb.productDao().insertAll(prod);
+                    if (time < prod.getLastUpdated()){
+                        time = prod.getLastUpdated();
+                    }
+                }
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                // update local last update
+                Product.setLocalLastUpdate(time);
+                EventStudentsListLoadingState.postValue(LoadingState.NOT_LOADING);
+            });
+        });
+    }
+
+    public void refreshAllProductsCustomer(){
+        //EventStudentsListLoadingState.setValue(LoadingState.LOADING);
+        // get local last update
+        Long localLastUpdate = Product.getLocalLastUpdate();
+        // get all updated recorde from firebase since local last update
+        firebaseModel.getAllProductsCustomerSince(localLastUpdate,list->{
+            executor.execute(()->{
+                Log.d("TAG", " firebase return : " + list.size());
+                Long time = localLastUpdate;
+                for(Product prod:list){
+                    // insert new records into ROOM
+                    localDb.productDao().insertAll(prod);
+                    if (time < prod.getLastUpdated()){
+                        time = prod.getLastUpdated();
+                    }
+                }
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                // update local last update
+                Product.setLocalLastUpdate(time);
+//                EventStudentsListLoadingState.postValue(LoadingState.NOT_LOADING);
+            });
+        });
+    }
+
+
+    public void refreshAllProducts(){
+        EventStudentsListLoadingState.setValue(LoadingState.LOADING);
+        // get local last update
+        Long localLastUpdate = Product.getLocalLastUpdate();
+        // get all updated recorde from firebase since local last update
+        firebaseModel.getAllProductsSince(localLastUpdate,list->{
+            executor.execute(()->{
+                Log.d("TAG", " firebase return : " + list.size());
+                Long time = localLastUpdate;
+                for(Product prod:list){
+                    // insert new records into ROOM
+                    localDb.productDao().insertAll(prod);
+                    if (time < prod.getLastUpdated()){
+                        time = prod.getLastUpdated();
+                    }
+                }
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                // update local last update
+                Product.setLocalLastUpdate(time);
+                EventStudentsListLoadingState.postValue(LoadingState.NOT_LOADING);
+            });
+        });
+    }
+
+    public void addProduct(Product prod, Listener<Void> listener){
+        firebaseModel.addProduct(prod,(Void)->{
+            refreshAllProducts();
+            listener.onComplete(null);
+        });
+    }
+
+    public void deleteProduct(Product product, Listener<Void> listener) {
+        firebaseModel.deleteProduct(product, new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                new Thread(() -> {
+                    localDb.productDao().delete(product);
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(() -> {
+                        listener.onComplete(null);
+                    });
+                }).start();
+            }
+        });
+    }
+    public void order(Product product, String newEmail, Listener<Void> listener) {
+        firebaseModel.order(product,newEmail, new Listener<Void>() {
+            @Override
+            public void onComplete(Void data) {
+                executor.execute(()->{
+                    localDb.productDao().order(product.getProductId(),newEmail);
+                    onComplete(data);
+                });
+            }
+        });
+    }
+
+
+
+
+    public void uploadImageUser(String name, Bitmap bitmap, Listener<String> listener) {
+        firebaseModel.uploadImageUser(name,bitmap,listener);
+    }
+
+    public void uploadImageProduct(String name, Bitmap bitmap, Listener<String> listener) {
+        firebaseModel.uploadImageProduct(name,bitmap,listener);
+    }
+
+
+    public FirebaseUser getCurrentUser(){
+        return firebaseModel.getUser();
+    }
 }
