@@ -61,6 +61,7 @@ public class ProductPageFragment extends Fragment {
                         public void onClick(View v) {
                             String email = Model.instance().getCurrentUser().getEmail();
                             Model.instance().order(pr,email,(unused)->{
+                                Toast.makeText(getActivity(),"Thanks",Toast.LENGTH_LONG).show();
                                 Navigation.findNavController(view).navigate(R.id.productsListFragment);
 
                             });

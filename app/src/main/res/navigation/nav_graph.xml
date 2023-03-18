@@ -77,6 +77,9 @@
         <argument
             android:name="productName"
             app:argType="string" />
+        <action
+            android:id="@+id/action_productPageFragment_to_productsListFragment"
+            app:destination="@id/productsListFragment" />
     </fragment>
     <fragment
         android:id="@+id/productsOwnerListFragment"
