@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@Entity(tableName = "Product")
+@Entity
 public class Product implements Serializable{
     @PrimaryKey
     @NonNull
@@ -46,7 +46,20 @@ public class Product implements Serializable{
         this.productId = UUID.randomUUID().toString();
 
     }
-//    static final String ID = "id";
+
+    public Product(@NonNull String productId, String name, String avatarUrl, String category, String price, String description, String ownerEmail, String customerEmail, Boolean cb) {
+        this.productId = productId;
+        this.name = name;
+        this.avatarUrl = avatarUrl;
+        this.category = category;
+        this.price = price;
+        this.description = description;
+        this.ownerEmail = ownerEmail;
+        this.customerEmail = customerEmail;
+        this.cb = cb;
+    }
+
+    //    static final String ID = "id";
     static final String PRODUCTID = "productid";
     static final String NAME = "name";
     static final String CATEGORY = "category";
@@ -70,7 +83,7 @@ public class Product implements Serializable{
         Boolean cb = (Boolean) json.get(CB);
         String owneremail = (String)json.get(OWNEREMAIL);
         String customeremail = (String) json.get(CUSTOMEREMAIL);
-        Product product = new Product(name,avatar,category,price,description,owneremail,customeremail,cb);
+        Product product = new Product(productid,name,avatar,category,price,description,owneremail,customeremail,cb);
         try{
             Timestamp time = (Timestamp) json.get(LAST_UPDATED);
             product.setLastUpdated(time.getSeconds());

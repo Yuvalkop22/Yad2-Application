@@ -117,8 +117,7 @@ public class AddPostFragment extends Fragment {
                             prod.setAvatarUrl(String.valueOf(url));
                         }
                         Model.instance().addProduct(prod,(unused)->{
-                            Toast.makeText(getContext(),"POST ADDED", Toast.LENGTH_LONG).show();
-
+                            Toast.makeText(getContext(),"PRODUCT ADDED", Toast.LENGTH_LONG).show();
                             Navigation.findNavController(view).popBackStack();
                         });
                     });

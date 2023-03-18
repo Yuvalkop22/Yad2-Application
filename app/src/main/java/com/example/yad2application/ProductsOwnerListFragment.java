@@ -70,7 +70,7 @@ public class ProductsOwnerListFragment extends Fragment {
             adapter.setData(list);
         });
 
-        Model.instance().EventStudentsListLoadingState.observe(getViewLifecycleOwner(), status->{
+        Model.instance().EventProductsListLoadingState.observe(getViewLifecycleOwner(), status->{
             binding.swipeRefreshOwner.setRefreshing(status == Model.LoadingState.LOADING);
         });
 

@@ -9,11 +9,8 @@ import com.example.yad2application.Model.Product;
 import java.util.List;
 
 public class ProductsListFragmentViewModel extends ViewModel {
+
     private LiveData<List<Product>> data = Model.instance().getAllProducts();
-
-
-
-
 
     LiveData<List<Product>> getData(){
         return data;
