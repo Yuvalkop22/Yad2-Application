@@ -25,8 +25,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
-import com.example.yad2application.ProductModel.Product;
-import com.example.yad2application.ProductModel.ProductModel;
+import com.example.yad2application.Model.Model;
+import com.example.yad2application.Model.Product;
 import com.example.yad2application.databinding.FragmentAddPostBinding;
 
 public class AddPostFragment extends Fragment {
@@ -87,7 +87,7 @@ public class AddPostFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         binding.spinner.setAdapter(adapter);
 
-        userEmail = ProductModel.instance().getCurrentUser().getEmail();
+            userEmail = Model.instance().getCurrentUser().getEmail();
         binding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -112,11 +112,11 @@ public class AddPostFragment extends Fragment {
                     binding.avatarImg.setDrawingCacheEnabled(true);
                     binding.avatarImg.buildDrawingCache();
                     Bitmap bitmap = ((BitmapDrawable) binding.avatarImg.getDrawable()).getBitmap();
-                    ProductModel.instance().uploadImage(name.toString(), bitmap, url-> {
+                    Model.instance().uploadImageProduct(name.toString(), bitmap, url-> {
                         if (url != null) {
                             prod.setAvatarUrl(String.valueOf(url));
                         }
-                        ProductModel.instance().addProduct(prod,(unused)->{
+                        Model.instance().addProduct(prod,(unused)->{
                             Toast.makeText(getContext(),"POST ADDED", Toast.LENGTH_LONG).show();
 
                             Navigation.findNavController(view).popBackStack();

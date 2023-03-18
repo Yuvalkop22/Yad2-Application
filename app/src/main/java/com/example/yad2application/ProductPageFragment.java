@@ -2,6 +2,7 @@ package com.example.yad2application;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -14,8 +15,10 @@ import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import com.example.yad2application.ProductModel.Product;
-import com.example.yad2application.ProductModel.ProductModel;
+import com.example.yad2application.Model.Model;
+import com.example.yad2application.Model.Product;
+import com.example.yad2application.Model.Product;
+import com.example.yad2application.Model.User;
 import com.example.yad2application.databinding.FragmentProductPageBinding;
 import com.squareup.picasso.Picasso;
 
@@ -50,19 +53,20 @@ public class ProductPageFragment extends Fragment {
                 binding.textDescriptionPreview.setText(pr.getDescription());
                 Picasso.get().load(pr.getAvatarUrl()).into(binding.productImg);
 
-                binding.btnBuyProdPage.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-//                        ProductModel.instance().deleteProduct(pr,(unused)->{
-//                            Navigation.findNavController(view).navigate(R.id.productsListFragment);
-//                        });
-                        String email = ProductModel.instance().getCurrentUser().getEmail();
-                        ProductModel.instance().order(pr.getName(),email,(unused)->{
-                            Navigation.findNavController(view).navigate(R.id.productsListFragment);
+                if (pr.customerEmail != null || pr.ownerEmail == Model.instance().getCurrentUser().getEmail()){
+                    binding.btnBuyProdPage.setVisibility(View.GONE);
+                } else{
+                    binding.btnBuyProdPage.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String email = Model.instance().getCurrentUser().getEmail();
+                            Model.instance().order(pr,email,(unused)->{
+                                Navigation.findNavController(view).navigate(R.id.productsListFragment);
 
-                        });
-                    }
-                });
+                            });
+                        }
+                    });
+                }
             }
         });
 

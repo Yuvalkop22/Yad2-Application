@@ -15,8 +15,8 @@
             android:id="@+id/action_FirstFragment_to_signUpFragment"
             app:destination="@id/signUpFragment" />
         <action
-            android:id="@+id/action_FirstFragment_to_signInFragment"
-            app:destination="@id/logInFragment" />
+            android:id="@+id/action_firstFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
 
     </fragment>
     <fragment
@@ -41,16 +41,7 @@
         tools:layout="@layout/fragment_sign_up">
         <action
             android:id="@+id/action_signUpFragment_to_signInFragment"
-            app:destination="@id/logInFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/logInFragment"
-        android:name="com.example.yad2application.SignInFragment"
-        android:label="Log in"
-        tools:layout="@layout/fragment_sign_in">
-        <action
-            android:id="@+id/action_signInFragment_to_SecondFragment"
-            app:destination="@id/secondFragment" />
+            app:destination="@id/signInFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
@@ -97,4 +88,13 @@
         android:name="com.example.yad2application.ProductsCustomerListFragment"
         android:label="fragment_products_customer_list_fragmet"
         tools:layout="@layout/fragment_products_customer_list_fragmet" />
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.example.yad2application.SignInFragment"
+        android:label="fragment_sign_in"
+        tools:layout="@layout/fragment_sign_in" >
+        <action
+            android:id="@+id/action_signInFragment_to_secondFragment"
+            app:destination="@id/secondFragment" />
+    </fragment>
 </navigation>

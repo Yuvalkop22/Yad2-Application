@@ -24,8 +24,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.yad2application.Model.Model;
-import com.example.yad2application.ProductModel.Product;
-import com.example.yad2application.ProductModel.ProductModel;
 import com.example.yad2application.databinding.FragmentFirstBinding;
 import com.example.yad2application.databinding.FragmentProfileBinding;
 import com.google.firebase.auth.FirebaseUser;
@@ -46,8 +44,9 @@ public class ProfileFragment extends Fragment {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
         super.onCreate(savedInstanceState);
-//        ProductCategoryTask task = new ProductCategoryTask(this);
-//        task.execute();
+
+        binding.profileText.setText(Model.instance().getUser().getEmail());
+
 
 
         binding.btnAllOwner.setOnClickListener(new View.OnClickListener() {

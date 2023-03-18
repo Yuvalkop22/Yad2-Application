@@ -41,7 +41,7 @@ public class SignInFragment extends Fragment {
         parentActivity.addMenuProvider(new MenuProvider() {
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-                menu.removeItem(R.id.logInFragment);
+                menu.removeItem(R.id.signInFragment);
             }
 
             @Override
@@ -62,10 +62,9 @@ public class SignInFragment extends Fragment {
         binding.btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String name = binding.usernameSignIn.getText().toString();
-                String stId = binding.passwordSignIn.getText().toString();
-                Log.v("TAG","name = " + name + "," + "password - " + stId);
-                User st = new User(stId.toString(),name.toString(),"",false);
+                String email = binding.emailSignIn.getText().toString();
+                String password = binding.passwordSignIn.getText().toString();
+                User st = new User(email,password,"");
 
                 Model.instance().signInUser(st,(unused)->{
                     Navigation.findNavController(view).navigate(R.id.secondFragment);
