@@ -102,7 +102,7 @@ public class Model {
     private LiveData<List<Product>> productsList;
     public LiveData<List<Product>> getAllProducts() {
         if(productsList == null){
-            productsList = localDb.productDao().getAll();
+            productsList = localDb.productDao().getAll(this.getCurrentUser().getEmail());
             refreshAllProducts();
         }
         return productsList;

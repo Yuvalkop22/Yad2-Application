@@ -164,6 +164,8 @@ public class FirebaseModel {
         db = FirebaseFirestore.getInstance();
         db.collection(Product.COLLECTION)
                 .whereGreaterThanOrEqualTo(Product.LAST_UPDATED, new Timestamp(since,0))
+                .whereNotEqualTo(Product.OWNEREMAIL,getUser().getEmail())
+                .whereNotEqualTo(Product.CUSTOMEREMAIL,getUser().getEmail())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -273,8 +275,16 @@ public class FirebaseModel {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Map<String,String> map = new HashMap<>();
+                        Map<String,Object> map = new HashMap<>();
                         map.put(Product.CUSTOMEREMAIL,newEmail);
+                        DocumentReference productReference = db.collection(Product.COLLECTION)
+                                .document(product.getProductId());
+                        productReference.update(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                listener.onComplete(null);
+                            }
+                        });
                         db.collection(User.COLLECTION).document(Model.instance().getCurrentUser().getEmail())
                                 .collection("CustomerProducts").
                                 document(product.getProductId()).set(map, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
