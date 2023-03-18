@@ -164,8 +164,8 @@ public class FirebaseModel {
         db = FirebaseFirestore.getInstance();
         db.collection(Product.COLLECTION)
                 .whereGreaterThanOrEqualTo(Product.LAST_UPDATED, new Timestamp(since,0))
-                .whereNotEqualTo(Product.OWNEREMAIL,getUser().getEmail())
-                .whereNotEqualTo(Product.CUSTOMEREMAIL,getUser().getEmail())
+//                .whereNotEqualTo(Product.OWNEREMAIL,getUser().getEmail())
+//                .whereNotEqualTo(Product.CUSTOMEREMAIL,getUser().getEmail())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
