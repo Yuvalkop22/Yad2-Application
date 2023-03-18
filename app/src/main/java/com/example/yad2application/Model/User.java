@@ -102,4 +102,5 @@ public class User {
     public void setLastUpdated(Long lastUpdated) {
         this.lastUpdated = lastUpdated;
     }
+
 }

@@ -7,14 +7,21 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import com.example.yad2application.Model.CurrencyConversion;
+import com.example.yad2application.Model.CurrencyConversionModel;
+import com.example.yad2application.Model.Joke;
+import com.example.yad2application.Model.JokeModel;
 import com.example.yad2application.Model.Model;
 import com.example.yad2application.Model.Product;
 import com.example.yad2application.Model.Product;
@@ -22,10 +29,17 @@ import com.example.yad2application.Model.User;
 import com.example.yad2application.databinding.FragmentProductPageBinding;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 
 public class ProductPageFragment extends Fragment {
     private FragmentProductPageBinding binding;
     ProductsListFragmentViewModel viewModel;
+    private String selectedCurrency;
+    LiveData<CurrencyConversion> data;
+    String currentCurrency;
+    double currentPrice;
+    String priceString;
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
@@ -40,6 +54,9 @@ public class ProductPageFragment extends Fragment {
         binding = FragmentProductPageBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
         viewModel = new ViewModelProvider(this).get(ProductsListFragmentViewModel.class);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),R.array.CURRENCY, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+        binding.currencySpinner.setAdapter(adapter);
 
         getParentFragmentManager().setFragmentResultListener("productDetail", this, new FragmentResultListener() {
             @Override
@@ -50,6 +67,7 @@ public class ProductPageFragment extends Fragment {
                 binding.textProductNamePreview.setText(pr.getName());
                 binding.textCategoryPreview.setText(pr.getCategory());
                 binding.textPricePreview.setText(pr.getPrice());
+                priceString = pr.getPrice();
                 binding.textDescriptionPreview.setText(pr.getDescription());
                 Picasso.get().load(pr.getAvatarUrl()).into(binding.productImg);
 
@@ -68,6 +86,45 @@ public class ProductPageFragment extends Fragment {
                         }
                     });
                 }
+            }
+        });
+
+
+
+            binding.currencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ///Currency Selector
+                currentCurrency = "USD";
+                try {
+                    currentPrice = Double.parseDouble(priceString);
+                }catch (NumberFormatException e){
+                    Log.d("TAG", "Failed parse to double: " + e.getMessage());
+                }
+                selectedCurrency =adapter.getItem(position).toString();
+                if(position != 0) {
+                    Log.d("TAG", "Currency clicked: " + selectedCurrency);
+                    Log.d("TAG", "Currency current: " + currentCurrency);
+                    Log.d("TAG", "Currency price: " + currentPrice);
+                    data = CurrencyConversionModel.instance.convertCurrency(currentCurrency,selectedCurrency,currentPrice);
+                    data.observe(getViewLifecycleOwner(), result->{
+                        String newAmount = result.getNew_amount().toString();
+                        Log.d("TAG", "Price returned: " + newAmount);
+                        binding.textPricePreview.setText(newAmount);
+                        currentCurrency = result.getNew_currency();
+                        try {
+                            currentPrice = Double.parseDouble(result.getNew_amount());
+                        }catch (NumberFormatException e) {
+                            Log.d("TAG", "onCreateView: " + e.getMessage());
+                        }});
+
+                }
+                }
+
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
 

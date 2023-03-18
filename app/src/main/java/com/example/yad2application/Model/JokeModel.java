@@ -23,16 +23,8 @@ public class JokeModel {
     Retrofit retrofit;
     JokesApi jokesAPI;
     private JokeModel(){
-//        Gson gson = new GsonBuilder()
-//                .setLenient()
-//                .create();
-//
-//        retrofit = new Retrofit.Builder()
-//                .baseUrl(BASE_URL)
-//                .addConverterFactory(GsonConverterFactory.create(gson))
-//                .build();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.api-ninjas.com/")
+        retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         jokesAPI = retrofit.create(JokesApi.class);
