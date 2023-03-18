@@ -53,7 +53,6 @@ public class FirstFragment extends Fragment {
         LiveData<List<Joke>> data = JokeModel.instance.getJoke(1);
         data.observe(getViewLifecycleOwner(), list->{
            String joke =  list.get(0).getJoke();
-            Toast.makeText(getContext(),joke, Toast.LENGTH_LONG).show();
             binding.JokeTextView.setText(joke);
         });
         return view;
