@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    android:label="Log in"
+    android:label="nav_graph"
     app:startDestination="@id/firstFragment">
     <fragment
         android:id="@+id/firstFragment"
@@ -47,7 +47,7 @@
         android:id="@+id/profileFragment"
         android:name="com.example.yad2application.ProfileFragment"
         android:label="Profile"
-        tools:layout="@layout/fragment_profile" >
+        tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_profileFragment_to_productsOwnerListFragment"
             app:destination="@id/productsOwnerListFragment" />
@@ -64,7 +64,7 @@
         android:id="@+id/productsListFragment"
         android:name="com.example.yad2application.ProductsListFragment"
         android:label="List of Products"
-        tools:layout="@layout/fragment_products_list" >
+        tools:layout="@layout/fragment_products_list">
         <action
             android:id="@+id/action_productsListFragment_to_productPageFragment"
             app:destination="@id/productPageFragment" />
@@ -73,7 +73,7 @@
         android:id="@+id/productPageFragment"
         android:name="com.example.yad2application.ProductPageFragment"
         android:label="Product Page"
-        tools:layout="@layout/fragment_product_page" >
+        tools:layout="@layout/fragment_product_page">
         <argument
             android:name="productName"
             app:argType="string" />
@@ -91,8 +91,8 @@
     <fragment
         android:id="@+id/signInFragment"
         android:name="com.example.yad2application.SignInFragment"
-        android:label="fragment_sign_in"
-        tools:layout="@layout/fragment_sign_in" >
+        android:label="Sign In"
+        tools:layout="@layout/fragment_sign_in">
         <action
             android:id="@+id/action_signInFragment_to_secondFragment"
             app:destination="@id/secondFragment" />

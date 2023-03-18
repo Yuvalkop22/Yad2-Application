@@ -5,13 +5,19 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.navigation.Navigation;
 
+import com.example.yad2application.Model.Joke;
+import com.example.yad2application.Model.JokeModel;
 import com.example.yad2application.databinding.FragmentFirstBinding;
+
+import java.util.List;
 
 public class FirstFragment extends Fragment {
 
@@ -44,6 +50,12 @@ public class FirstFragment extends Fragment {
             }
         });
 
+        LiveData<List<Joke>> data = JokeModel.instance.getJoke(1);
+        data.observe(getViewLifecycleOwner(), list->{
+           String joke =  list.get(0).getJoke();
+            Toast.makeText(getContext(),joke, Toast.LENGTH_LONG).show();
+            binding.JokeTextView.setText(joke);
+        });
         return view;
     }
 
