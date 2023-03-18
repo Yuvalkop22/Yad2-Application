@@ -41,7 +41,8 @@ public class Model {
         LOADING,
         NOT_LOADING
     }
-    final public MutableLiveData<LoadingState> EventStudentsListLoadingState = new MutableLiveData<LoadingState>(LoadingState.NOT_LOADING);
+    final public MutableLiveData<LoadingState> EventUsersListLoadingState = new MutableLiveData<LoadingState>(LoadingState.NOT_LOADING);
+    final public MutableLiveData<LoadingState> EventProductsListLoadingState = new MutableLiveData<LoadingState>(LoadingState.NOT_LOADING);
 
 
 
@@ -55,7 +56,7 @@ public class Model {
     }
 
     public void refreshAllUsers(){
-        EventStudentsListLoadingState.setValue(LoadingState.LOADING);
+        EventUsersListLoadingState.setValue(LoadingState.LOADING);
         // get local last update
         Long localLastUpdate = User.getLocalLastUpdate();
         // get all updated recorde from firebase since local last update
@@ -77,7 +78,7 @@ public class Model {
                 }
                 // update local last update
                 User.setLocalLastUpdate(time);
-                EventStudentsListLoadingState.postValue(LoadingState.NOT_LOADING);
+                EventUsersListLoadingState.postValue(LoadingState.NOT_LOADING);
             });
         });
     }
@@ -102,11 +103,6 @@ public class Model {
     public LiveData<List<Product>> getAllProducts() {
         if(productsList == null){
             productsList = localDb.productDao().getAll();
-            refreshAllProducts();
-        }
-        if (productsList != null){
-            productsList = null;
-            productsList =localDb.productDao().getAll();
             refreshAllProducts();
         }
         return productsList;
@@ -139,7 +135,7 @@ public class Model {
 
 
     public void refreshAllProductsOwner(){
-        EventStudentsListLoadingState.setValue(LoadingState.LOADING);
+        EventProductsListLoadingState.setValue(LoadingState.LOADING);
         // get local last update
         Long localLastUpdate = Product.getLocalLastUpdate();
         // get all updated recorde from firebase since local last update
@@ -161,7 +157,7 @@ public class Model {
                 }
                 // update local last update
                 Product.setLocalLastUpdate(time);
-                EventStudentsListLoadingState.postValue(LoadingState.NOT_LOADING);
+                EventProductsListLoadingState.postValue(LoadingState.NOT_LOADING);
             });
         });
     }
@@ -189,14 +185,14 @@ public class Model {
                 }
                 // update local last update
                 Product.setLocalLastUpdate(time);
-//                EventStudentsListLoadingState.postValue(LoadingState.NOT_LOADING);
+                EventProductsListLoadingState.postValue(LoadingState.NOT_LOADING);
             });
         });
     }
 
 
     public void refreshAllProducts(){
-        EventStudentsListLoadingState.setValue(LoadingState.LOADING);
+        EventProductsListLoadingState.setValue(LoadingState.LOADING);
         // get local last update
         Long localLastUpdate = Product.getLocalLastUpdate();
         // get all updated recorde from firebase since local last update
@@ -204,11 +200,11 @@ public class Model {
             executor.execute(()->{
                 Log.d("TAG", " firebase return : " + list.size());
                 Long time = localLastUpdate;
-                for(Product prod:list){
+                for(Product st:list){
                     // insert new records into ROOM
-                    localDb.productDao().insertAll(prod);
-                    if (time < prod.getLastUpdated()){
-                        time = prod.getLastUpdated();
+                    localDb.productDao().insertAll(st);
+                    if (time < st.getLastUpdated()){
+                        time = st.getLastUpdated();
                     }
                 }
                 try {
@@ -218,7 +214,7 @@ public class Model {
                 }
                 // update local last update
                 Product.setLocalLastUpdate(time);
-                EventStudentsListLoadingState.postValue(LoadingState.NOT_LOADING);
+                EventProductsListLoadingState.postValue(LoadingState.NOT_LOADING);
             });
         });
     }

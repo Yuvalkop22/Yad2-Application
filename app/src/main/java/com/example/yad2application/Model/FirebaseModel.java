@@ -162,16 +162,18 @@ public class FirebaseModel {
     }
     public void getAllProductsSince(Long since, Model.Listener<List<Product>> callback){
         db = FirebaseFirestore.getInstance();
-        db.collection(Product.COLLECTION).whereGreaterThanOrEqualTo(Product.LAST_UPDATED,new Timestamp(since,0))
-                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection(Product.COLLECTION)
+                .whereGreaterThanOrEqualTo(Product.LAST_UPDATED, new Timestamp(since,0))
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         List<Product> list = new LinkedList<>();
                         if (task.isSuccessful()){
                             QuerySnapshot jsonsList = task.getResult();
                             for (DocumentSnapshot json: jsonsList){
-                                Product st = Product.fromJson(json.getData());
-                                list.add(st);
+                                Product product = Product.fromJson(json.getData());
+                                list.add(product);
                             }
                         }
                         callback.onComplete(list);
@@ -281,13 +283,6 @@ public class FirebaseModel {
                                 listener.onComplete(null);
                             }
                         });
-                        db.collection(Product.COLLECTION).document(product.getProductId()).set(map,SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                listener.onComplete(null);
-                            }
-                        });
-                        listener.onComplete(null);
                     }
                 });
     }

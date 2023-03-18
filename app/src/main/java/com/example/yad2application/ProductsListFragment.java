@@ -72,7 +72,7 @@ public class ProductsListFragment extends Fragment {
             adapter.setData(list);
         });
 
-        Model.instance().EventStudentsListLoadingState.observe(getViewLifecycleOwner(),status->{
+        Model.instance().EventProductsListLoadingState.observe(getViewLifecycleOwner(),status->{
             binding.swipeRefresh.setRefreshing(status == Model.LoadingState.LOADING);
         });
 
@@ -89,7 +89,7 @@ public class ProductsListFragment extends Fragment {
     }
 
     void reloadData(){
-//        binding.progressBar.setVisibility(View.VISIBLE);
+        //binding.progressBar.setVisibility(View.VISIBLE);
         Model.instance().refreshAllProducts();
     }
     static class ProductViewHolder extends RecyclerView.ViewHolder{
@@ -164,8 +164,9 @@ public class ProductsListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
-            Product st = data.get(position);
-            holder.bind(st,position);
+            Product product = data.get(position);
+            Log.d("TAG","ID = " + product.getProductId());
+            holder.bind(product,position);
         }
 
         @Override
