@@ -28,13 +28,12 @@ public class Product implements Serializable{
     public String description ="";
     public String ownerEmail = "";
     public String customerEmail = "";
-    public Boolean cb=false;
     public Long lastUpdated;
 
     public Product(){
     }
 
-    public Product(String name, String avatarUrl, String category, String price, String description, String ownerEmail, String customerEmail, Boolean cb) {
+    public Product(String name, String avatarUrl, String category, String price, String description, String ownerEmail, String customerEmail) {
         this.name = name;
         this.avatarUrl = avatarUrl;
         this.category = category;
@@ -42,12 +41,11 @@ public class Product implements Serializable{
         this.description = description;
         this.ownerEmail = ownerEmail;
         this.customerEmail = customerEmail;
-        this.cb = cb;
         this.productId = UUID.randomUUID().toString();
 
     }
 
-    public Product(@NonNull String productId, String name, String avatarUrl, String category, String price, String description, String ownerEmail, String customerEmail, Boolean cb) {
+    public Product(@NonNull String productId, String name, String avatarUrl, String category, String price, String description, String ownerEmail, String customerEmail) {
         this.productId = productId;
         this.name = name;
         this.avatarUrl = avatarUrl;
@@ -56,7 +54,6 @@ public class Product implements Serializable{
         this.description = description;
         this.ownerEmail = ownerEmail;
         this.customerEmail = customerEmail;
-        this.cb = cb;
     }
 
     //    static final String ID = "id";
@@ -68,7 +65,6 @@ public class Product implements Serializable{
     static final String AVATAR = "avatar";
     static final String OWNEREMAIL = "owneremail";
     static final String CUSTOMEREMAIL = "customeremail";
-    static final String CB = "cb";
     static final String COLLECTION = "Products";
     static final String LAST_UPDATED = "lastUpdated";
     static final String LOCAL_LAST_UPDATED = "products_local_last_update";
@@ -80,10 +76,9 @@ public class Product implements Serializable{
         String price= (String) json.get(PRICE);
         String description = (String) json.get(DESCRIPTION);
         String avatar = (String)json.get(AVATAR);
-        Boolean cb = (Boolean) json.get(CB);
         String owneremail = (String)json.get(OWNEREMAIL);
         String customeremail = (String) json.get(CUSTOMEREMAIL);
-        Product product = new Product(productid,name,avatar,category,price,description,owneremail,customeremail,cb);
+        Product product = new Product(productid,name,avatar,category,price,description,owneremail,customeremail);
         try{
             Timestamp time = (Timestamp) json.get(LAST_UPDATED);
             product.setLastUpdated(time.getSeconds());
@@ -113,7 +108,6 @@ public class Product implements Serializable{
         json.put(PRICE,getPrice());
         json.put(DESCRIPTION,getDescription());
         json.put(AVATAR, getAvatarUrl());
-        json.put(CB, getCb());
         json.put(OWNEREMAIL,getOwnerEmail());
         json.put(CUSTOMEREMAIL,getCustomerEmail());
         json.put(LAST_UPDATED, FieldValue.serverTimestamp());
@@ -147,10 +141,6 @@ public class Product implements Serializable{
         this.avatarUrl = avatarUrl;
     }
 
-    public void setCb(Boolean cb) {
-        this.cb = cb;
-    }
-
     public String getCategory() {
         return category;
     }
@@ -166,10 +156,6 @@ public class Product implements Serializable{
 
     public String getAvatarUrl() {
         return avatarUrl;
-    }
-
-    public Boolean getCb() {
-        return cb;
     }
 
     public Long getLastUpdated() {

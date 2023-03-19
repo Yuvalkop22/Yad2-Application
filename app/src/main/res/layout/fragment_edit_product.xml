@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddPostFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/avatarImgEditPage"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:layout_marginTop="8dp"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/ic_baseline_add_photo_alternate_24" />
+
+                <ImageButton
+                    android:id="@+id/galleryButtonEditPage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|left"
+                    android:layout_margin="10dp"
+                    android:src="@drawable/ic_baseline_image_search_24" />
+
+                <ImageButton
+                    android:id="@+id/cameraButtonEditPage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|right"
+                    android:layout_margin="10dp"
+                    android:src="@drawable/ic_baseline_photo_camera_24" />
+            </FrameLayout>
+
+
+            <Spinner
+                android:id="@+id/spinnerEditPage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/product_nameEditPage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Product Name" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/priceEditPage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Price"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/descriptionEditPage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Description" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/Save"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:text="Sell" />
+
+                <Button
+                    android:id="@+id/cancellBtnEditPage"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:text="CANCEL" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

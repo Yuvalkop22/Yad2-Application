@@ -57,7 +57,7 @@ public class ProductsListFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("product", pr);
 
-                getParentFragmentManager().setFragmentResult("productDetail",bundle);
+                getParentFragmentManager().setFragmentResult("EditproductDetail",bundle);
                 ProductPageFragment productPageFragment = new ProductPageFragment();
                 productPageFragment.setArguments(bundle);
 
