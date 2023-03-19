@@ -11,10 +11,15 @@ import androidx.annotation.NonNull;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.yad2application.Model.Joke;
 import com.example.yad2application.Model.JokeModel;
+import com.example.yad2application.Model.Model;
+import com.example.yad2application.Model.User;
 import com.example.yad2application.databinding.FragmentFirstBinding;
 
 import java.util.List;
@@ -22,6 +27,7 @@ import java.util.List;
 public class FirstFragment extends Fragment {
 
     private FragmentFirstBinding binding;
+    UserViewModel userViewModel;
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
@@ -36,6 +42,18 @@ public class FirstFragment extends Fragment {
         setHasOptionsMenu(true);
         binding = FragmentFirstBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
+
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+
+        userViewModel.getCurrentUser().observe(getViewLifecycleOwner(), new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                if(user != null){
+                    Navigation.findNavController(view).navigate(R.id.secondFragment);
+                }
+            }
+        });
+
         binding.btnLoginFirst.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

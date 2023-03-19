@@ -3,6 +3,8 @@ package com.example.yad2application;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.yad2application.Model.Model;
+import com.example.yad2application.Model.User;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
@@ -10,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
 
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -41,7 +45,15 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.toolbar);
 
+
+
         navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+
+
+        navController.navigate(R.id.firstFragment);
+
+
+
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
@@ -60,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if (item.getItemId() == R.id.firstFragment){
             firebaseAuth.signOut();
+            Model.instance().signOut();
             navController.navigate(R.id.firstFragment);
         }
         if (item.getItemId() == R.id.profileFragment){
