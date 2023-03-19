@@ -255,22 +255,23 @@ public class FirebaseModel {
 
     public void addProduct(Product product, Model.Listener<Void> listener) {
         db = FirebaseFirestore.getInstance();
-
+        auth = FirebaseAuth.getInstance();
+        firebaseUser = auth.getCurrentUser();
         db.collection(User.COLLECTION).document(firebaseUser.getEmail())
                 .collection("OwnerProducts").document(product.getProductId()).set(product.toJson())
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        listener.onComplete(null);
+                        db.collection(Product.COLLECTION).document(product.getProductId()).set(product.toJson())
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        listener.onComplete(null);
+                                    }
+                                });
                     }
                 });
-        db.collection(Product.COLLECTION).document(product.getProductId()).set(product.toJson())
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        listener.onComplete(null);
-                    }
-                });
+
     }
 
 
