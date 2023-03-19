@@ -2,8 +2,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.yad2application.MainActivity">
-    <item android:id="@+id/profileFragment"
-        android:icon="@drawable/avatar"
+    <item
+        android:id="@+id/profileFragment"
+        android:icon="@drawable/ic_baseline_person_white_24"
         android:title="Profile Icon"
         app:showAsAction="ifRoom" />
     <item
