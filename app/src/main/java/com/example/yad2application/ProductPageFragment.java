@@ -40,6 +40,7 @@ public class ProductPageFragment extends Fragment {
     String currentCurrency;
     double currentPrice;
     String priceString;
+    int currentCurrenctPosition;
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
@@ -90,7 +91,7 @@ public class ProductPageFragment extends Fragment {
         });
 
 
-
+            currentCurrenctPosition = 0;
             binding.currencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -102,7 +103,8 @@ public class ProductPageFragment extends Fragment {
                     Log.d("TAG", "Failed parse to double: " + e.getMessage());
                 }
                 selectedCurrency =adapter.getItem(position).toString();
-                if(position != 0) {
+                if(position != currentCurrenctPosition) {
+                    currentCurrenctPosition = position;
                     Log.d("TAG", "Currency clicked: " + selectedCurrency);
                     Log.d("TAG", "Currency current: " + currentCurrency);
                     Log.d("TAG", "Currency price: " + currentPrice);
