@@ -253,9 +253,18 @@ public class FirebaseModel {
 
 
 
-    public void addProduct(Product pro, Model.Listener<Void> listener) {
+    public void addProduct(Product product, Model.Listener<Void> listener) {
         db = FirebaseFirestore.getInstance();
-        db.collection(Product.COLLECTION).document(pro.getProductId()).set(pro.toJson())
+
+        db.collection(User.COLLECTION).document(firebaseUser.getEmail())
+                .collection("OwnerProducts").document(product.getProductId()).set(product.toJson())
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        listener.onComplete(null);
+                    }
+                });
+        db.collection(Product.COLLECTION).document(product.getProductId()).set(product.toJson())
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
