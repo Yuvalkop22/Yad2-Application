@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LiveData;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import android.util.Log;
@@ -26,6 +27,7 @@ import android.widget.Toast;
 import com.example.yad2application.Model.Model;
 import com.example.yad2application.databinding.FragmentFirstBinding;
 import com.example.yad2application.databinding.FragmentProfileBinding;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.lang.ref.WeakReference;
@@ -33,7 +35,9 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class ProfileFragment extends Fragment {
-
+    FirebaseAuth firebaseAuth;
+    FirebaseUser firebaseUser;
+    NavController navController;
     private FragmentProfileBinding binding;
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -41,12 +45,13 @@ public class ProfileFragment extends Fragment {
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
         super.onCreate(savedInstanceState);
 
-
-
+        binding.profileText.setText("Hello, " + firebaseUser.getEmail());
 
         binding.btnAllOwner.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,6 +64,21 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Navigation.findNavController(view).navigate(R.id.productsCustomerListFragment);
+            }
+        });
+
+        binding.btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                firebaseAuth.signOut();
+                Model.instance().signOut();
+                navController.navigate(R.id.firstFragment);            }
+        });
+
+        binding.btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Navigation.findNavController(view).popBackStack();
             }
         });
 

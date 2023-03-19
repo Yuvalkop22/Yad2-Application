@@ -86,17 +86,34 @@
         <action
             android:id="@+id/action_productPageFragment_to_productsListFragment2"
             app:destination="@id/productsListFragment" />
+        <action
+            android:id="@+id/action_productPageFragment_to_productsOwnerListFragment"
+            app:destination="@id/productsOwnerListFragment" />
+        <action
+            android:id="@+id/action_productPageFragment_to_productsCustomerListFragment"
+            app:destination="@id/productsCustomerListFragment" />
+        <action
+            android:id="@+id/action_productPageFragment_to_editProductFragment"
+            app:destination="@id/editProductFragment" />
     </fragment>
     <fragment
         android:id="@+id/productsOwnerListFragment"
         android:name="com.example.yad2application.ProductsOwnerListFragment"
         android:label="fragment_products_owner_list"
-        tools:layout="@layout/fragment_products_owner_list" />
+        tools:layout="@layout/fragment_products_owner_list" >
+        <action
+            android:id="@+id/action_productsOwnerListFragment_to_productPageFragment"
+            app:destination="@id/productPageFragment" />
+    </fragment>
     <fragment
         android:id="@+id/productsCustomerListFragment"
         android:name="com.example.yad2application.ProductsCustomerListFragment"
         android:label="fragment_products_customer_list_fragmet"
-        tools:layout="@layout/fragment_products_customer_list_fragmet" />
+        tools:layout="@layout/fragment_products_customer_list_fragmet" >
+        <action
+            android:id="@+id/action_productsCustomerListFragment_to_productPageFragment"
+            app:destination="@id/productPageFragment" />
+    </fragment>
     <fragment
         android:id="@+id/signInFragment"
         android:name="com.example.yad2application.SignInFragment"
@@ -105,5 +122,14 @@
         <action
             android:id="@+id/action_signInFragment_to_secondFragment"
             app:destination="@id/secondFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editProductFragment"
+        android:name="com.example.yad2application.EditProductFragment"
+        android:label="fragment_edit_product"
+        tools:layout="@layout/fragment_edit_product" >
+        <action
+            android:id="@+id/action_editProductFragment_to_productPageFragment"
+            app:destination="@id/productPageFragment" />
     </fragment>
 </navigation>

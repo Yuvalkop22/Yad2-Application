@@ -24,8 +24,8 @@
 
         <Button
             android:id="@+id/btnAllOwner"
-            android:layout_width="179dp"
-            android:layout_height="69dp"
+            android:layout_width="200dp"
+            android:layout_height="80dp"
             android:layout_marginBottom="20dp"
             android:text="view my selling"
             app:layout_constraintBottom_toTopOf="@+id/btnAllCustomer"
@@ -37,8 +37,8 @@
 
         <Button
             android:id="@+id/btnAllCustomer"
-            android:layout_width="195dp"
-            android:layout_height="78dp"
+            android:layout_width="200dp"
+            android:layout_height="80dp"
             android:layout_marginBottom="236dp"
             android:text="view bought products"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -57,6 +57,7 @@
                 android:id="@+id/btn_logout"
                 android:layout_width="70dp"
                 android:layout_height="50dp"
+                android:layout_margin="10dp"
                 android:layout_weight="1"
                 android:text="Log out" />
 
@@ -64,6 +65,7 @@
                 android:id="@+id/btn_back"
                 android:layout_width="70dp"
                 android:layout_height="50dp"
+                android:layout_margin="10dp"
                 android:layout_weight="1"
                 android:text="Back" />
         </LinearLayout>
