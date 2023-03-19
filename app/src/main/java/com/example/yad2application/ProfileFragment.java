@@ -45,6 +45,10 @@ public class ProfileFragment extends Fragment {
         View view = binding.getRoot();
         super.onCreate(savedInstanceState);
 
+        binding.profileText.setText(Model.instance().getUser().getEmail());
+
+
+
         binding.btnAllOwner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

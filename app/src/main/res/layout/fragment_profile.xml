@@ -15,52 +15,59 @@
             android:id="@+id/profileText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Profile Page"
-            android:textSize="50sp"
+            android:textSize="30sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.57"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.352" />
-
-        <TextView
-            android:id="@+id/user_email_tv"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="100dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="100dp"
-            android:layout_marginBottom="100dp"
-            android:text="Hello"
-            app:layout_constraintBottom_toTopOf="@+id/profileText"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints" />
+            app:layout_constraintVertical_bias="0.106" />
 
         <Button
             android:id="@+id/btnAllOwner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:layout_marginBottom="184dp"
-            android:text="Owner"
+            android:layout_width="179dp"
+            android:layout_height="69dp"
+            android:layout_marginBottom="20dp"
+            android:text="view my selling"
             app:layout_constraintBottom_toTopOf="@+id/btnAllCustomer"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/profileText"
+            app:layout_constraintVertical_bias="0.67"
             tools:ignore="MissingConstraints" />
 
         <Button
             android:id="@+id/btnAllCustomer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Customer"
+            android:layout_width="195dp"
+            android:layout_height="78dp"
+            android:layout_marginBottom="236dp"
+            android:text="view bought products"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteY="533dp" />
+            tools:ignore="MissingConstraints" />
+
+        <LinearLayout
+            android:layout_width="413dp"
+            android:layout_height="97dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <Button
+                android:id="@+id/btn_logout"
+                android:layout_width="70dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:text="Log out" />
+
+            <Button
+                android:id="@+id/btn_back"
+                android:layout_width="70dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:text="Back" />
+        </LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>
