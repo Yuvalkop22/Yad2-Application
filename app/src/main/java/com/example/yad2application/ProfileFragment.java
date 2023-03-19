@@ -45,7 +45,6 @@ public class ProfileFragment extends Fragment {
         View view = binding.getRoot();
         super.onCreate(savedInstanceState);
 
-        binding.profileText.setText(Model.instance().getUser().getEmail());
 
 
 
