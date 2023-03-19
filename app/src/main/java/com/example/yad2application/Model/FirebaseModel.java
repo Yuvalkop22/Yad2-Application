@@ -266,6 +266,7 @@ public class FirebaseModel {
 
 
     public FirebaseUser getCurrentUser(){
+        auth = FirebaseAuth.getInstance();
         firebaseUser = auth.getCurrentUser();
         return firebaseUser;
     }
