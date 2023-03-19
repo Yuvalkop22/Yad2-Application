@@ -46,13 +46,25 @@ public class FirebaseModel {
 
     }
 
-    public FirebaseUser getUser(){
-        auth = FirebaseAuth.getInstance();
-        firebaseUser = auth.getCurrentUser();
-        return firebaseUser;
+    public void getUser(String email, Model.Listener<User> listener) {
+        db.collection(User.COLLECTION).whereEqualTo(User.EMAIL,email)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            QuerySnapshot jsonList = task.getResult();
+                            for (DocumentSnapshot json : jsonList) {
+                                User user = User.fromJson(json.getData());
+                                Log.d("TAG", "User found");
+                                listener.onComplete(user);
+                            }
+                        }
+                    }
+                });
     }
 
     public void getAllUsersSince(Long since, Model.Listener<List<User>> callback){
+        db = FirebaseFirestore.getInstance();
         db.collection(User.COLLECTION)
                 .whereGreaterThanOrEqualTo(User.LAST_UPDATED, new Timestamp(since,0))
                 .get()
@@ -72,30 +84,36 @@ public class FirebaseModel {
                 });
     }
 
-    public void signInUser(User user, Model.Listener<Void> listener) {
+    public void signInUser(String email,String password, Model.Listener<FirebaseUser> listener) {
         auth = FirebaseAuth.getInstance();
-        firebaseUser = auth.getCurrentUser();
-        auth.signInWithEmailAndPassword(user.getEmail(),user.getPassword()).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+        db = FirebaseFirestore.getInstance();
+        auth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
-            public void onSuccess(AuthResult authResult) {
-                listener.onComplete(null);
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()){
+                    FirebaseUser user = auth.getCurrentUser();
+                    listener.onComplete(user);
+                }
             }
         });
     }
 
-    public void addUser(User user, Model.Listener<Void> listener) {
-        db = FirebaseFirestore.getInstance();
+    public void signUpUserFirebase(String email,String password, Model.Listener<FirebaseUser> listener) {
         auth = FirebaseAuth.getInstance();
-        auth.createUserWithEmailAndPassword(user.getEmail(),user.getPassword()).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+        auth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
-            public void onSuccess(AuthResult authResult) {
-                db.collection(User.COLLECTION).document(user.getEmail()).set(user.toJson())
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                listener.onComplete(null);
-                            }
-                        });
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                FirebaseUser user = auth.getCurrentUser();
+                listener.onComplete(user);
+            }
+        });
+    }
+    public void addUserToFirebase(User user, Model.Listener<Void> listener){
+        db = FirebaseFirestore.getInstance();
+        db.collection(User.COLLECTION).document(user.getEmail()).set(user.toJson()).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                listener.onComplete(null);
             }
         });
     }
@@ -186,9 +204,11 @@ public class FirebaseModel {
 
     public void getAllProductsOwnerSince(Long since, Model.Listener<List<Product>> callback){
         db  = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+        firebaseUser = auth.getCurrentUser();
         db.collection(Product.COLLECTION)
                 .whereGreaterThanOrEqualTo(Product.LAST_UPDATED, new Timestamp(since,0))
-                .whereEqualTo(Product.OWNEREMAIL,getUser().getEmail())
+                .whereEqualTo(Product.OWNEREMAIL,firebaseUser.getEmail())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -209,9 +229,11 @@ public class FirebaseModel {
 
     public void getAllProductsCustomerSince(Long since, Model.Listener<List<Product>> callback){
         db  = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+        firebaseUser = auth.getCurrentUser();
         db.collection(Product.COLLECTION)
                 .whereGreaterThanOrEqualTo(Product.LAST_UPDATED, new Timestamp(since,0))
-                .whereEqualTo(Product.CUSTOMEREMAIL,getUser().getEmail())
+                .whereEqualTo(Product.CUSTOMEREMAIL,firebaseUser.getEmail())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -242,35 +264,18 @@ public class FirebaseModel {
                 });
     }
 
-//    public void order(String name, String newEmail, Model.Listener<Void> listener) {
-//        db = FirebaseFirestore.getInstance();
-//        CollectionReference productsRef = db.collection(Product.COLLECTION);
-//
-//        productsRef.whereEqualTo(Product.NAME, name)
-//                .get()
-//                .addOnCompleteListener(task -> {
-//                    if (task.isSuccessful()) {
-//                        WriteBatch batch = db.batch();
-//                        for (QueryDocumentSnapshot doc : task.getResult()) {
-//                            batch.update(doc.getReference(), Product.CUSTOMEREMAIL, newEmail);
-//                        }
-//                        batch.commit()
-//                                .addOnCompleteListener(commitTask -> {
-//                                    if (commitTask.isSuccessful()) {
-//                                        listener.onComplete(null);
-//                                    } else {
-//                                        Log.e("TAG", "Error updating documents: ", commitTask.getException());
-//                                    }
-//                                });
-//                    } else {
-//                        Log.e("TAG", "Error getting documents: ", task.getException());
-//                    }
-//                });
-//    }
+
+    public FirebaseUser getCurrentUser(){
+        firebaseUser = auth.getCurrentUser();
+        return firebaseUser;
+    }
+
 
     public void order(Product product, String newEmail,Model.Listener<Void> listener){
         db = FirebaseFirestore.getInstance();
-        db.collection(User.COLLECTION).document(Model.instance().getCurrentUser().getEmail())
+        auth = FirebaseAuth.getInstance();
+        firebaseUser = auth.getCurrentUser();
+        db.collection(User.COLLECTION).document(firebaseUser.getEmail())
                 .collection("CustomerProducts").document(product.getProductId()).set(product.toJson())
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -285,7 +290,7 @@ public class FirebaseModel {
                                 listener.onComplete(null);
                             }
                         });
-                        db.collection(User.COLLECTION).document(Model.instance().getCurrentUser().getEmail())
+                        db.collection(User.COLLECTION).document(firebaseUser.getEmail())
                                 .collection("CustomerProducts").
                                 document(product.getProductId()).set(map, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override

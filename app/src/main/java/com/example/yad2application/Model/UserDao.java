@@ -14,14 +14,21 @@ public interface UserDao {
     @Query("select * from User")
     LiveData<List<User>> getAll();
 
-//    @Query("select * from User where id = :userId")
-//    User getUserById(String userId);
+    @Query("SELECT * FROM User LIMIT 1")
+    LiveData<User> getUser();
+
+    @Query("select * from User where email = :email")
+    User getUserByEmail(String email);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(User... users);
 
+
     @Delete
     void delete(User user);
+
+    @Query("DELETE FROM User")
+    void deleteAll();
 
 
 }

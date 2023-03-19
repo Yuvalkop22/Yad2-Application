@@ -64,9 +64,8 @@ public class SignInFragment extends Fragment {
             public void onClick(View view) {
                 String email = binding.emailSignIn.getText().toString();
                 String password = binding.passwordSignIn.getText().toString();
-                User st = new User(email,password,"");
 
-                Model.instance().signInUser(st,(unused)->{
+                Model.instance().signInUser(email,password,(unused)->{
                     Navigation.findNavController(view).navigate(R.id.secondFragment);
                 });
 

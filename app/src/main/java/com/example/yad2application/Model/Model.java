@@ -12,6 +12,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class Model {
     private Handler mainHandler = HandlerCompat.createAsync(Looper.getMainLooper());
     private FirebaseModel firebaseModel = new FirebaseModel();
     AppLocalDbRepository localDb = AppLocalDb.getAppDb();
+    private LiveData<User> user;
 
     public static Model instance(){
         return _instance;
@@ -35,6 +37,7 @@ public class Model {
     public interface Listener<T>{
         void onComplete(T data);
     }
+
 
 
     public enum LoadingState{
@@ -83,26 +86,54 @@ public class Model {
         });
     }
 
-    public void addUser(User user, Listener<Void> listener){
-        firebaseModel.addUser(user,(Void)->{
-            refreshAllUsers();
-            listener.onComplete(null);
+    public void addUser(User user, Listener<User> listener){
+        firebaseModel.signUpUserFirebase(user.getEmail(),user.getPassword(),(FirebaseUser)->{
+            if (FirebaseUser != null){
+                firebaseModel.addUserToFirebase(user,(unused)->{
+                    executor.execute(()->{
+                        localDb.userDao().deleteAll();
+                        localDb.userDao().insertAll(user);
+                    });
+                    listener.onComplete(user);
+                });
+            }else{
+                listener.onComplete(null);
+            }
         });
     }
-    public FirebaseUser getUser(){
-        return firebaseModel.getUser();
+    public LiveData<User> getUser(){
+        if(user == null){
+            user = localDb.userDao().getUser();
+        }
+        return user;
     }
+    public void signInUser(String email,String password, Listener<User>listener){
+        firebaseModel.signInUser(email,password, (FireBaseUser) -> {
+            if (FireBaseUser != null)
+            {
+                firebaseModel.getUser(FireBaseUser.getEmail(), (User) -> {
+                    Log.d("TAG", "userfound in Model");
+                    executor.execute(()->{
+                        localDb.userDao().deleteAll();
+                        localDb.userDao().insertAll(User);
 
-    public void signInUser(User st, Listener<Void>listener){
-        firebaseModel.signInUser(st,(Void)->{
-            listener.onComplete(null);
+                    });
+
+                    listener.onComplete(User);
+                });
+            }
+            else {
+                listener.onComplete(null);
+            }
+
         });
+
     }
 
     private LiveData<List<Product>> productsList;
     public LiveData<List<Product>> getAllProducts() {
         if(productsList == null){
-            productsList = localDb.productDao().getAll(this.getCurrentUser().getEmail());
+            productsList = localDb.productDao().getAll();
             refreshAllProducts();
         }
         return productsList;
@@ -240,6 +271,19 @@ public class Model {
             }
         });
     }
+    public void deleteUserByEmail(String email, Listener<Void> listener) {
+        // First get the user by email
+        executor.execute(() -> {
+            User user = localDb.userDao().getUserByEmail(email);
+            if (user != null) {
+                // If user exists, delete it
+                localDb.userDao().delete(user);
+                listener.onComplete(null);
+            }
+        });
+    }
+
+
     public void order(Product product, String newEmail, Listener<Void> listener) {
         firebaseModel.order(product,newEmail, new Listener<Void>() {
             @Override
@@ -252,10 +296,21 @@ public class Model {
         });
     }
 
+    public void signOut(){
+        executor.execute(()->{
+            localDb.userDao().deleteAll();
+            user = null;
+        });
+    }
+
+    public FirebaseUser getCurrentUser(){
+        return firebaseModel.getCurrentUser();
+    }
 
 
 
-    public void uploadImageUser(String name, Bitmap bitmap, Listener<String> listener) {
+
+        public void uploadImageUser(String name, Bitmap bitmap, Listener<String> listener) {
         firebaseModel.uploadImageUser(name,bitmap,listener);
     }
 
@@ -263,8 +318,4 @@ public class Model {
         firebaseModel.uploadImageProduct(name,bitmap,listener);
     }
 
-
-    public FirebaseUser getCurrentUser(){
-        return firebaseModel.getUser();
-    }
 }

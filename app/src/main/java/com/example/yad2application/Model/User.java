@@ -44,15 +44,14 @@ public class User {
         String email = (String)json.get(EMAIL);
         String password = (String) json.get(PASSWORD);
         String avatar = (String)json.get(AVATAR);
-
-        User st = new User(email,password,avatar);
+        User user = new User(email,password,avatar);
         try{
             Timestamp time = (Timestamp) json.get(LAST_UPDATED);
-            st.setLastUpdated(time.getSeconds());
+            user.setLastUpdated(time.getSeconds());
         }catch(Exception e){
 
         }
-        return st;
+        return user;
     }
 
     public static Long getLocalLastUpdate() {

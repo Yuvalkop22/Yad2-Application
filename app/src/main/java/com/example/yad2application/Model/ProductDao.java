@@ -16,8 +16,8 @@ public interface ProductDao {
 //    LiveData<List<Product>> getAll(String email);
 
 
-    @Query("select * from Product WHERE customerEmail != :email AND ownerEmail != :email")
-    LiveData<List<Product>> getAll(String email);
+    @Query("select * from Product")
+    LiveData<List<Product>> getAll();
 
     @Query("SELECT * FROM Product WHERE productId = :productId")
     Product getProductById(String productId);
