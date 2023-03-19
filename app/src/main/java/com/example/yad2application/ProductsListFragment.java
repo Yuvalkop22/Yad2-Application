@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,7 +23,6 @@ import com.example.yad2application.Model.Product;
 import com.example.yad2application.databinding.FragmentProductsListBinding;
 import com.squareup.picasso.Picasso;
 
-import java.io.Serializable;
 import java.util.List;
 
 public class ProductsListFragment extends Fragment {
@@ -94,25 +92,15 @@ public class ProductsListFragment extends Fragment {
     }
     static class ProductViewHolder extends RecyclerView.ViewHolder{
         TextView nameTv;
-        TextView idTv;
-        CheckBox cb;
+        TextView priceTv;
         List<Product> data;
         ImageView avatarImage;
         public ProductViewHolder(@NonNull View itemView, ProductRecyclerAdapter.OnItemClickListener listener, List<Product> data) {
             super(itemView);
             this.data = data;
             nameTv = itemView.findViewById(R.id.productlistrow_name_tv);
-            idTv = itemView.findViewById(R.id.productlistrow_id_tv);
+            priceTv = itemView.findViewById(R.id.productlistrow_price_tv);
             avatarImage = itemView.findViewById(R.id.productlistrow_avatar_img);
-            cb = itemView.findViewById(R.id.productlistrow_cb);
-            cb.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int pos = (int)cb.getTag();
-                    Product st = data.get(pos);
-                    st.cb = cb.isChecked();
-                }
-            });
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -124,11 +112,9 @@ public class ProductsListFragment extends Fragment {
 
         public void bind(Product st, int pos) {
             nameTv.setText(st.name);
-            idTv.setText(st.description);
-            cb.setChecked(st.cb);
-            cb.setTag(pos);
+            priceTv.setText("$" + st.price);
             if (st.getAvatarUrl()  != null && st.getAvatarUrl().length() > 5) {
-                Picasso.get().load(st.getAvatarUrl()).placeholder(R.drawable.avatar).into(avatarImage);
+                Picasso.get().load(st.getAvatarUrl()).placeholder(R.drawable.ic_baseline_photo_camera_24).into(avatarImage);
             }else{
                 avatarImage.setImageResource(R.drawable.avatar);
             }
