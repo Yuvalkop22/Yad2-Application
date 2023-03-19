@@ -30,6 +30,7 @@ import com.example.yad2application.databinding.FragmentProductPageBinding;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+import java.util.Locale;
 
 
 public class ProductPageFragment extends Fragment {
@@ -41,6 +42,9 @@ public class ProductPageFragment extends Fragment {
     double currentPrice;
     String priceString;
     int currentCurrenctPosition;
+    boolean isProductOwner = false;
+
+    private Product product;
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
@@ -65,6 +69,7 @@ public class ProductPageFragment extends Fragment {
                 Log.d("TAG", "In product page -> name: " + result.getString("name"));
 
                 Product pr = (Product) result.getSerializable("product");
+                setProduct(pr);
                 binding.textProductNamePreview.setText(pr.getName());
                 binding.textCategoryPreview.setText(pr.getCategory());
                 binding.textPricePreview.setText(pr.getPrice());
@@ -72,9 +77,13 @@ public class ProductPageFragment extends Fragment {
                 binding.textDescriptionPreview.setText(pr.getDescription());
                 Picasso.get().load(pr.getAvatarUrl()).into(binding.productImg);
 
-                if (pr.customerEmail != null || pr.ownerEmail == Model.instance().getCurrentUser().getEmail()){
-                    binding.btnBuyProdPage.setVisibility(View.GONE);
-                } else{
+                if (pr.ownerEmail.equals(Model.instance().getCurrentUser().getEmail())){
+                    binding.btnBuyProdPage.setText("Edit");
+                    binding.btnCancelProdPage.setText("Delete");
+                    isProductOwner = true;
+                }
+                //If the user is not the owner
+                if(!isProductOwner){
                     binding.btnBuyProdPage.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -86,9 +95,34 @@ public class ProductPageFragment extends Fragment {
                             });
                         }
                     });
+                    binding.btnCancelProdPage.setOnClickListener((view1) -> {
+                        Navigation.findNavController(view1).popBackStack();
+                    });
+                }
+                //If the user is the owner
+                if(isProductOwner){
+                    //Edit button - Navigate to edit page
+                    binding.btnBuyProdPage.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("product", product);
+                            getParentFragmentManager().setFragmentResult("productDetail",bundle);
+                            EditProductFragment editProductFragment = new EditProductFragment();
+                            editProductFragment.setArguments(bundle);
+                            Log.d("TAG", "Product name sent -> " + product.getName());
+                            Navigation.findNavController(view).navigate(R.id.editProductFragment);
+                        }
+                    });
+                    //Delete button - Yuval needs to configure.
+                    binding.btnCancelProdPage.setOnClickListener((view1) -> {
+                        Navigation.findNavController(view1).popBackStack();
+                    });
                 }
             }
+
         });
+
 
 
             currentCurrenctPosition = 0;
@@ -130,14 +164,7 @@ public class ProductPageFragment extends Fragment {
             }
         });
 
-
-
-        binding.btnCancelProdPage.setOnClickListener((view1)->{
-            Navigation.findNavController(view1).popBackStack();
-        });
-
         return view;
-
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -150,5 +177,12 @@ public class ProductPageFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 }

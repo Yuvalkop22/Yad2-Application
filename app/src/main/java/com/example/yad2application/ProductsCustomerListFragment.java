@@ -54,10 +54,11 @@ public class ProductsCustomerListFragment extends Fragment {
             @Override
             public void onItemClick(int pos) {
                 Log.d("TAG", "Row was clicked " + pos);
+                Product pr = viewModel.getDataAsCustomer().getValue().get(pos);
                 Bundle bundle = new Bundle();
-                bundle.putInt("pos",pos); // Put anything what you want
-                getParentFragmentManager().setFragmentResult("posClicked",bundle);
-                Log.d("TAG", pos + "");
+                bundle.putSerializable("product", pr);
+
+                getParentFragmentManager().setFragmentResult("productDetail",bundle);
                 ProductPageFragment productPageFragment = new ProductPageFragment();
                 productPageFragment.setArguments(bundle);
 
