@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.yad2application.Model.Model;
+import com.example.yad2application.Model.User;
 import com.example.yad2application.databinding.FragmentFirstBinding;
 import com.example.yad2application.databinding.FragmentProfileBinding;
 import com.google.firebase.auth.FirebaseAuth;
@@ -67,12 +68,17 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        binding.btnLogout.setOnClickListener(new View.OnClickListener() {
+        binding.btnEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                firebaseAuth.signOut();
-                Model.instance().signOut();
-                navController.navigate(R.id.firstFragment);            }
+                Bundle bundle = new Bundle();
+                User user = Model.instance().getUser().getValue();
+                bundle.putSerializable("user", user);
+                getParentFragmentManager().setFragmentResult("EditUserDetails", bundle);
+                EditProfileFragment editProfileFragment = new EditProfileFragment();
+                editProfileFragment.setArguments(bundle);
+                Navigation.findNavController(view).navigate(R.id.editProfileFragment);
+            }
         });
 
         binding.btnBack.setOnClickListener(new View.OnClickListener() {

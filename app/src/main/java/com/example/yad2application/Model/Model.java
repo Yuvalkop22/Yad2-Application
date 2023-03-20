@@ -285,6 +285,21 @@ public class Model {
             }
         });
     }
+    public void updateUserEmail(String email,Model.Listener<Boolean> listener){
+        firebaseModel.editUserFirebase(email,(FirebaseUser)->{
+            if (FirebaseUser != null){
+                firebaseModel.editUserDocument(email,(unused)->{
+                    executor.execute(()->{
+                        localDb.userDao().updateProductEmail(email);
+                    });
+                    listener.onComplete(true);
+                });
+            }else{
+                listener.onComplete(false);
+            }
+        });
+    }
+
 
         public void order(Product product, String newEmail, Listener<Void> listener) {
         firebaseModel.order(product,newEmail, new Listener<Void>() {

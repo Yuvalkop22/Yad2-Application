@@ -11,12 +11,13 @@ import com.example.yad2application.MyApplication;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FieldValue;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Entity
-public class User {
+public class User implements Serializable {
     @PrimaryKey
     @NonNull
     public String email="";

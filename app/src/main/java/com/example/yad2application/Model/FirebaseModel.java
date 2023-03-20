@@ -339,8 +339,35 @@ public class FirebaseModel {
                 });
     }
 
+    public void editUserDocument(String email, Model.Listener<Void> listener) {
+        db = FirebaseFirestore.getInstance();
+        HashMap<String,Object> hashMap = new HashMap<>();
+        hashMap.put(User.EMAIL,email);
+        DocumentReference documentReference = db.collection(User.COLLECTION).document(email);
+        documentReference.update(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                listener.onComplete(null);
+            }
+        });
+    }
+    public void editUserFirebase(String email, Model.Listener<FirebaseUser> listener){
+        auth = FirebaseAuth.getInstance();
+        firebaseUser = auth.getCurrentUser();
+        db = FirebaseFirestore.getInstance();
+        firebaseUser.updateEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    listener.onComplete(firebaseUser);
+                }else{
+                    listener.onComplete(null);
+                }
+            }
+        });
+    }
 
-    public void deleteProduct(Product product, Model.Listener<Void> listener) {
+        public void deleteProduct(Product product, Model.Listener<Void> listener) {
         db = FirebaseFirestore.getInstance();
         db.collection(Product.COLLECTION).document(product.getProductId())
                 .delete()

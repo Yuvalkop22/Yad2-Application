@@ -57,6 +57,12 @@
         <action
             android:id="@+id/action_profileFragment_to_productsCustomerListFragment"
             app:destination="@id/productsCustomerListFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_editProfileFragment2"
+            app:destination="@id/editProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/addPostFragment"
@@ -134,5 +140,17 @@
         <action
             android:id="@+id/action_editProductFragment_to_productsListFragment"
             app:destination="@id/productsListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.example.yad2application.EditProfileFragment"
+        android:label="fragment_edit_profile"
+        tools:layout="@layout/fragment_edit_profile" >
+        <action
+            android:id="@+id/action_editProfileFragment_to_firstFragment"
+            app:destination="@id/firstFragment" />
+        <action
+            android:id="@+id/action_editProfileFragment_to_firstFragment2"
+            app:destination="@id/firstFragment" />
     </fragment>
 </navigation>
