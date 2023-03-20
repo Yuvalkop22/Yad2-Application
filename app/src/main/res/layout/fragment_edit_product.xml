@@ -11,8 +11,10 @@
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
@@ -21,32 +23,7 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/avatarImgEditPage"
-                    android:layout_width="match_parent"
-                    android:layout_height="250dp"
-                    android:layout_marginTop="8dp"
-                    android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/ic_baseline_add_photo_alternate_24" />
-
-                <ImageButton
-                    android:id="@+id/galleryButtonEditPage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|left"
-                    android:layout_margin="10dp"
-                    android:src="@drawable/ic_baseline_image_search_24" />
-
-                <ImageButton
-                    android:id="@+id/cameraButtonEditPage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|right"
-                    android:layout_margin="10dp"
-                    android:src="@drawable/ic_baseline_photo_camera_24" />
-            </FrameLayout>
+                android:layout_height="wrap_content" />
 
 
             <Spinner
@@ -109,17 +86,17 @@
                 <Button
                     android:id="@+id/Save"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:text="Sell" />
+                    android:layout_weight="1"
+                    android:text="UPDATE" />
 
                 <Button
                     android:id="@+id/cancellBtnEditPage"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
+                    android:layout_weight="1"
                     android:text="CANCEL" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 

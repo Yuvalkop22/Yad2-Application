@@ -63,13 +63,12 @@ public class ProductPageFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         binding.currencySpinner.setAdapter(adapter);
 
-        getParentFragmentManager().setFragmentResultListener("productDetail", this, new FragmentResultListener() {
+        getParentFragmentManager().setFragmentResultListener("EditproductDetail", this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
                 Log.d("TAG", "In product page -> name: " + result.getString("name"));
 
                 Product pr = (Product) result.getSerializable("product");
-                setProduct(pr);
                 binding.textProductNamePreview.setText(pr.getName());
                 binding.textCategoryPreview.setText(pr.getCategory());
                 binding.textPricePreview.setText(pr.getPrice());
@@ -106,18 +105,34 @@ public class ProductPageFragment extends Fragment {
                         @Override
                         public void onClick(View v) {
                             Bundle bundle = new Bundle();
-                            bundle.putSerializable("product", product);
-                            getParentFragmentManager().setFragmentResult("productDetail",bundle);
+                            bundle.putSerializable("product", pr);
+                            getParentFragmentManager().setFragmentResult("EditproductDetail1",bundle);
                             EditProductFragment editProductFragment = new EditProductFragment();
                             editProductFragment.setArguments(bundle);
-                            Log.d("TAG", "Product name sent -> " + product.getName());
                             Navigation.findNavController(view).navigate(R.id.editProductFragment);
+
                         }
                     });
                     //Delete button - Yuval needs to configure.
-                    binding.btnCancelProdPage.setOnClickListener((view1) -> {
-                        Navigation.findNavController(view1).popBackStack();
-                    });
+                    if (pr.getCustomerEmail() == null) {
+                        binding.btnCancelProdPage.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Model.instance().deleteProduct(pr, (unused)->{
+                                    requireActivity().runOnUiThread(() -> {
+                                        Navigation.findNavController(view).navigate(R.id.productsListFragment);
+                                    });
+                                });
+                            }
+                        });
+                    }else{
+                        binding.btnCancelProdPage.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(getContext(),"You can't delete product someone already bought",Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
                 }
             }
 
@@ -132,7 +147,8 @@ public class ProductPageFragment extends Fragment {
                 ///Currency Selector
                 currentCurrency = "USD";
                 try {
-                    currentPrice = Double.parseDouble(priceString);
+                    if (priceString != null)
+                        currentPrice = Double.parseDouble(priceString.trim());
                 }catch (NumberFormatException e){
                     Log.d("TAG", "Failed parse to double: " + e.getMessage());
                 }

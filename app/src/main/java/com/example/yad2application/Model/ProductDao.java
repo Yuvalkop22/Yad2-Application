@@ -34,6 +34,10 @@ public interface ProductDao {
     @Query("UPDATE Product SET customerEmail = :newEmail WHERE customerEmail IS NULL AND productId = :productId")
     void order(String productId,String newEmail);
 
+    @Query("UPDATE Product SET name = :name AND price = :price AND price = :price AND description = :description WHERE productId = :productId")
+    void updateProduct(String productId,String name, String price,String description);
+
+
     @Delete
     void delete(Product product);
 

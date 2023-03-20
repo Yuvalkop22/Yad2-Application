@@ -98,8 +98,19 @@ public class SignUpFragment extends Fragment {
                     Model.instance().uploadImageUser(email, bitmap, url -> {
                         if (url != null) {
                             user.setAvatarUrl(url);
-                            Model.instance().addUser(user,(unused)->{
-                                Navigation.findNavController(view).navigate(R.id.signInFragment);
+                            Model.instance().addUser(user,(result)->{
+                                if (result != null)
+                                    Navigation.findNavController(view).navigate(R.id.signInFragment);
+                                else {
+                                    String pattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+                                    if (!email.matches(pattern)){
+                                        Toast.makeText(getContext(),"Make sure the email is in the correct format...",Toast.LENGTH_LONG).show();
+                                    } else if (password.length() < 6){
+                                        Toast.makeText(getContext(),"Make sure the password is longer than 6...",Toast.LENGTH_LONG).show();
+                                    }else if (!email.matches(pattern) && password.length() <  6){
+                                        Toast.makeText(getContext(),"Problem with email and password",Toast.LENGTH_LONG).show();
+                                    }
+                                }
                             });
                         }
                     });
