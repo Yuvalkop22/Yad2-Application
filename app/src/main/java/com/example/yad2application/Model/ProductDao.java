@@ -31,7 +31,7 @@ public interface ProductDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Product... products);
 
-    @Query("UPDATE Product SET customerEmail = :newEmail WHERE customerEmail IS NULL AND productId = :productId")
+    @Query("UPDATE Product SET customerEmail = :newEmail WHERE productId = :productId")
     void order(String productId,String newEmail);
 
     @Query("UPDATE Product SET name = :name AND price = :price AND price = :price AND description = :description WHERE productId = :productId")

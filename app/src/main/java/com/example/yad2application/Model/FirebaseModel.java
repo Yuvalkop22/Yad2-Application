@@ -86,6 +86,8 @@ public class FirebaseModel {
                 if (task.isSuccessful()){
                     FirebaseUser user = auth.getCurrentUser();
                     listener.onComplete(user);
+                }else{
+                    listener.onComplete(null);
                 }
             }
         });
@@ -97,7 +99,10 @@ public class FirebaseModel {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 FirebaseUser user = auth.getCurrentUser();
-                listener.onComplete(user);
+                if (task.isSuccessful())
+                    listener.onComplete(user);
+                else
+                    listener.onComplete(null);
             }
         });
     }
@@ -327,7 +332,7 @@ public class FirebaseModel {
 
     public void deleteProduct(Product product, Model.Listener<Void> listener) {
         db = FirebaseFirestore.getInstance();
-        db.collection(Product.COLLECTION).document(product.getName())
+        db.collection(Product.COLLECTION).document(product.getProductId())
                 .delete()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override

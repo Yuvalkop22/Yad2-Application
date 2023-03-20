@@ -107,7 +107,7 @@ public class AddPostFragment extends Fragment {
                 String category = selectedCategory;
                 String description = binding.description.getText().toString();
                 //Student st = new Student(stId.,name.toString(),"",false);
-                Product prod = new Product(name,"",category,price,description,userEmail,null);
+                Product prod = new Product(name,"",category,price,description,userEmail,"");
                 if (isAvatarSelected){
                     binding.avatarImg.setDrawingCacheEnabled(true);
                     binding.avatarImg.buildDrawingCache();
