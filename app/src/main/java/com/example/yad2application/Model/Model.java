@@ -136,6 +136,11 @@ public class Model {
             productsList = localDb.productDao().getAll();
             refreshAllProducts();
         }
+        if (productsList != null){
+            productsList = null;
+            productsList =localDb.productDao().getAll();
+            refreshAllProducts();
+        }
         return productsList;
     }
     public LiveData<List<Product>> getAllProductsOwner(String email) {
