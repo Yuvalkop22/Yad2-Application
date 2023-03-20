@@ -49,6 +49,7 @@ public class ProductsListFragment extends Fragment {
         adapter = new ProductRecyclerAdapter(getLayoutInflater(),viewModel.getData().getValue());
         binding.productsrecyclerList.setAdapter(adapter);
 
+        reloadData();
         adapter.setOnItemClickListener(new ProductRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int pos) {

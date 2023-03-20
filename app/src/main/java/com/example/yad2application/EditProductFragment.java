@@ -55,7 +55,7 @@ public class EditProductFragment extends Fragment {
                         String newName = binding.productNameEditPage.getText().toString();
                         String newPrice = binding.priceEditPage.getText().toString();
                         String newDescription = binding.descriptionEditPage.getText().toString();
-                        if (!newName.equals(name) && !newPrice.equals(price) && !newDescription.equals(description)){
+                        if (newName.equals(name) && newPrice.equals(price) && newDescription.equals(description)){
                             Toast.makeText(getContext(),"Nothing changed",Toast.LENGTH_LONG).show();
                         }else{
                             Model.instance().updateProduct(product.getProductId(), newName, newPrice, newDescription, (unused) -> {

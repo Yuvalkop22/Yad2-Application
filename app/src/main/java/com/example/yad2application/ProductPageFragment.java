@@ -97,6 +97,15 @@ public class ProductPageFragment extends Fragment {
                     binding.btnCancelProdPage.setOnClickListener((view1) -> {
                         Navigation.findNavController(view1).popBackStack();
                     });
+                    if (pr.getCustomerEmail() != null){
+                        binding.btnBuyProdPage.setVisibility(View.GONE);
+                        binding.btnCancelProdPage.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Navigation.findNavController(view).navigate(R.id.productsListFragment);
+                            }
+                        });
+                    }
                 }
                 //If the user is the owner
                 if(isProductOwner){
@@ -104,13 +113,16 @@ public class ProductPageFragment extends Fragment {
                     binding.btnBuyProdPage.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable("product", pr);
-                            getParentFragmentManager().setFragmentResult("EditproductDetail1",bundle);
-                            EditProductFragment editProductFragment = new EditProductFragment();
-                            editProductFragment.setArguments(bundle);
-                            Navigation.findNavController(view).navigate(R.id.editProductFragment);
-
+                            if (pr.getCustomerEmail() == null) {
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("product", pr);
+                                getParentFragmentManager().setFragmentResult("EditproductDetail1", bundle);
+                                EditProductFragment editProductFragment = new EditProductFragment();
+                                editProductFragment.setArguments(bundle);
+                                Navigation.findNavController(view).navigate(R.id.editProductFragment);
+                            }else{
+                                Toast.makeText(getContext(),"You can't edit product someone already bought...",Toast.LENGTH_LONG).show();
+                            }
                         }
                     });
                     //Delete button - Yuval needs to configure.
