@@ -99,8 +99,8 @@
     <fragment
         android:id="@+id/productsOwnerListFragment"
         android:name="com.example.yad2application.ProductsOwnerListFragment"
-        android:label="fragment_products_owner_list"
-        tools:layout="@layout/fragment_products_owner_list" >
+        android:label="My Sellings"
+        tools:layout="@layout/fragment_products_owner_list">
         <action
             android:id="@+id/action_productsOwnerListFragment_to_productPageFragment"
             app:destination="@id/productPageFragment" />
@@ -108,8 +108,8 @@
     <fragment
         android:id="@+id/productsCustomerListFragment"
         android:name="com.example.yad2application.ProductsCustomerListFragment"
-        android:label="fragment_products_customer_list_fragmet"
-        tools:layout="@layout/fragment_products_customer_list_fragmet" >
+        android:label="Bought Products"
+        tools:layout="@layout/fragment_products_customer_list_fragmet">
         <action
             android:id="@+id/action_productsCustomerListFragment_to_productPageFragment"
             app:destination="@id/productPageFragment" />
@@ -126,8 +126,8 @@
     <fragment
         android:id="@+id/editProductFragment"
         android:name="com.example.yad2application.EditProductFragment"
-        android:label="fragment_edit_product"
-        tools:layout="@layout/fragment_edit_product" >
+        android:label="Edit Product"
+        tools:layout="@layout/fragment_edit_product">
         <action
             android:id="@+id/action_editProductFragment_to_productPageFragment"
             app:destination="@id/productPageFragment" />

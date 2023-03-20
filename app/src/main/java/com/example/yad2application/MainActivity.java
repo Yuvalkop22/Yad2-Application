@@ -78,6 +78,9 @@ public class MainActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.profileFragment){
             navController.navigate(R.id.profileFragment);
         }
+        if (item.getItemId() == R.id.secondFragment){
+            navController.navigate(R.id.secondFragment);
+        }
             return super.onOptionsItemSelected(item);
     }
 
