@@ -120,7 +120,7 @@ public class ProductPageFragment extends Fragment {
                     binding.btnBuyProdPage.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (pr.getCustomerEmail() == null) {
+                            if (pr.getCustomerEmail().equals("")) {
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable("product", pr);
                                 getParentFragmentManager().setFragmentResult("EditproductDetail1", bundle);
@@ -133,7 +133,7 @@ public class ProductPageFragment extends Fragment {
                         }
                     });
                     //Delete button - Yuval needs to configure.
-                    if (pr.getCustomerEmail() == null) {
+                    if (pr.getCustomerEmail().equals("")) {
                         binding.btnCancelProdPage.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
