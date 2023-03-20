@@ -114,9 +114,25 @@ public class ProductPageFragment extends Fragment {
                         }
                     });
                     //Delete button - Yuval needs to configure.
-                    binding.btnCancelProdPage.setOnClickListener((view1) -> {
-                        Navigation.findNavController(view1).popBackStack();
-                    });
+                    if (pr.getCustomerEmail() == null) {
+                        binding.btnCancelProdPage.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Model.instance().deleteProduct(pr, (unused)->{
+                                    requireActivity().runOnUiThread(() -> {
+                                        Navigation.findNavController(view).navigate(R.id.productsListFragment);
+                                    });
+                                });
+                            }
+                        });
+                    }else{
+                        binding.btnCancelProdPage.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(getContext(),"You can't delete product someone already bought",Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
                 }
             }
 

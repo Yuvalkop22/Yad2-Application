@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.yad2application.Model.Model;
 import com.example.yad2application.Model.User;
@@ -65,8 +66,12 @@ public class SignInFragment extends Fragment {
                 String email = binding.emailSignIn.getText().toString();
                 String password = binding.passwordSignIn.getText().toString();
 
-                Model.instance().signInUser(email,password,(unused)->{
-                    Navigation.findNavController(view).navigate(R.id.secondFragment);
+                Model.instance().signInUser(email,password,(user)->{
+                    if (user != null){
+                        Navigation.findNavController(view).navigate(R.id.secondFragment);
+                    }else{
+                        Toast.makeText(getContext(),"Problem with email or password",Toast.LENGTH_SHORT).show();
+                    }
                 });
 
 

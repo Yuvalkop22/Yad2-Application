@@ -112,7 +112,7 @@ public class Model {
             if (FireBaseUser != null)
             {
                 firebaseModel.getUser(FireBaseUser.getEmail(), (User) -> {
-                    Log.d("TAG", "userfound in Model");
+                    Log.d("TAG", "user found in Model");
                     executor.execute(()->{
                         localDb.userDao().deleteAll();
                         localDb.userDao().insertAll(User);
@@ -258,27 +258,13 @@ public class Model {
     }
 
     public void deleteProduct(Product product, Listener<Void> listener) {
-        firebaseModel.deleteProduct(product, new OnCompleteListener<Void>() {
+        firebaseModel.deleteProduct(product, new Listener<Void>() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                new Thread(() -> {
+            public void onComplete(Void data) {
+                executor.execute(()->{
                     localDb.productDao().delete(product);
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(() -> {
-                        listener.onComplete(null);
-                    });
-                }).start();
-            }
-        });
-    }
-    public void deleteUserByEmail(String email, Listener<Void> listener) {
-        // First get the user by email
-        executor.execute(() -> {
-            User user = localDb.userDao().getUserByEmail(email);
-            if (user != null) {
-                // If user exists, delete it
-                localDb.userDao().delete(user);
-                listener.onComplete(null);
+                    listener.onComplete(null);
+                });
             }
         });
     }
