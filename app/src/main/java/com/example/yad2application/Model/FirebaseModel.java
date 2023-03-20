@@ -273,6 +273,8 @@ public class FirebaseModel {
     }
 
 
+
+
     public FirebaseUser getCurrentUser(){
         auth = FirebaseAuth.getInstance();
         firebaseUser = auth.getCurrentUser();
@@ -291,6 +293,14 @@ public class FirebaseModel {
         DocumentReference productReference = db.collection(Product.COLLECTION)
                 .document(productId);
         productReference.update(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                listener.onComplete(null);
+            }
+        });
+        DocumentReference documentReference1 = db.collection(User.COLLECTION).document(firebaseUser.getEmail())
+                .collection("OwnerProducts").document(productId);
+        documentReference1.update(map).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 listener.onComplete(null);
@@ -345,6 +355,14 @@ public class FirebaseModel {
                         }
                     }
                 });
+        DocumentReference documentReference = db.collection(User.COLLECTION).document(firebaseUser.getEmail())
+                .collection("OwnerProducts").document(product.getProductId());
+        documentReference.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                listener.onComplete(null);
+            }
+        });
     }
 
 
