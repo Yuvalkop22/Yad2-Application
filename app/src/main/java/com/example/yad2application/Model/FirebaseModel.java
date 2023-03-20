@@ -3,31 +3,23 @@ package com.example.yad2application.Model;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
-import android.util.Patterns;
 
 import androidx.annotation.NonNull;
 
-import com.example.yad2application.Model.Product;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreSettings;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
-import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -333,7 +325,7 @@ public class FirebaseModel {
     }
 
 
-    public void deleteProduct(Product product, OnCompleteListener<Void> listener) {
+    public void deleteProduct(Product product, Model.Listener<Void> listener) {
         db = FirebaseFirestore.getInstance();
         db.collection(Product.COLLECTION).document(product.getName())
                 .delete()
