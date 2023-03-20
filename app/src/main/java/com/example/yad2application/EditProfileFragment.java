@@ -50,24 +50,25 @@ public class EditProfileFragment extends Fragment {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
                 User user = (User) result.getSerializable("user");
-                String oldEmail = user.getEmail();
                 if (user != null) {
+                    String oldEmail = user.getEmail();
                     binding.email.setText(user.getEmail());
                     Picasso.get().load(user.getAvatarUrl()).into(binding.avatarImg);
-                }
-                String newEmail = binding.email.getText().toString();
 
-                binding.update.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Model.instance().updateUserEmail(oldEmail,newEmail,(unused)-> {
-                            requireActivity().runOnUiThread(() -> {
-                                Navigation.findNavController(view).navigate(R.id.firstFragment);
+
+                    binding.update.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String newEmail = binding.email.getText().toString();
+                            String password = Model.instance().getUser().getValue().getPassword();
+                            Model.instance().updateUserEmail(oldEmail,newEmail,password, (unused) -> {
+                                requireActivity().runOnUiThread(() -> {
+                                    Navigation.findNavController(view).navigate(R.id.firstFragment);
+                                });
                             });
-                        });
-                    }
-                });
-
+                        }
+                    });
+                }
             }
         });
 

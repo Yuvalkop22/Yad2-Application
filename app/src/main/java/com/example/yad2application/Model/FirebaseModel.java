@@ -11,7 +11,9 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -342,33 +344,78 @@ public class FirebaseModel {
                 });
     }
 
-    public void editUserDocument(String email, Model.Listener<Void> listener) {
-        db = FirebaseFirestore.getInstance();
-        HashMap<String,Object> hashMap = new HashMap<>();
-        hashMap.put(User.EMAIL,email);
-        DocumentReference documentReference = db.collection(User.COLLECTION).document(email);
-        documentReference.update(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+    public void editUserDocument(String oldEmail,String email, Model.Listener<Void> listener) {
+        String newDocId = email;
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference oldDocRef = db.collection(User.COLLECTION).document(oldEmail);
+        oldDocRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                listener.onComplete(null);
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    Map<String, Object> data = documentSnapshot.getData();
+                    DocumentReference newDocRef = db.collection(User.COLLECTION).document(newDocId);
+                    newDocRef.set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            oldDocRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d("TAG", "Old document deleted successfully.");
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.e("TAG", "Failed to delete old document.", e);
+                                }
+                            });
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e("TAG", "Failed to create new document.", e);
+                        }
+                    });
+                } else {
+                    Log.d("TAG", "Old document does not exist.");
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e("TAG", "Failed to get old document.", e);
             }
         });
+
     }
-    public void editUserFirebase(String email, Model.Listener<FirebaseUser> listener){
+    public void editUserFirebase(String email, String password, Model.Listener<FirebaseUser> listener){
         auth = FirebaseAuth.getInstance();
         firebaseUser = auth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
-        firebaseUser.updateEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+        // Re-authenticate user
+        AuthCredential credential = EmailAuthProvider.getCredential(firebaseUser.getEmail(), password);
+        firebaseUser.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()){
-                    listener.onComplete(firebaseUser);
-                }else{
+                if (task.isSuccessful()) {
+                    // Update email
+                    firebaseUser.updateEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()){
+                                listener.onComplete(firebaseUser);
+                            }else{
+                                listener.onComplete(null);
+                            }
+                        }
+                    });
+                } else {
                     listener.onComplete(null);
                 }
             }
         });
     }
+
     public void editEmailFromProducts(String oldEmail,String newEmail,Model.Listener<Void> listener){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
