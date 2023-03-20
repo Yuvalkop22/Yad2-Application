@@ -104,7 +104,7 @@ public class ProductPageFragment extends Fragment {
                     binding.btnCancelProdPage.setOnClickListener((view1) -> {
                         Navigation.findNavController(view1).popBackStack();
                     });
-                    if (pr.getCustomerEmail() != null){
+                    if (!pr.getCustomerEmail().equals("")){
                         binding.btnBuyProdPage.setVisibility(View.GONE);
                         binding.btnCancelProdPage.setOnClickListener(new View.OnClickListener() {
                             @Override
