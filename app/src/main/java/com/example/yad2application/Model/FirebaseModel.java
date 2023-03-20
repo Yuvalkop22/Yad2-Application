@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.Query;
@@ -281,6 +282,24 @@ public class FirebaseModel {
         return firebaseUser;
     }
 
+    public void updateProduct(String productId,String name, String price,String description,Model.Listener<Void> listener){
+        db = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+        firebaseUser = auth.getCurrentUser();
+        Map<String,Object> map = new HashMap<>();
+        map.put(Product.NAME,name);
+        map.put(Product.PRICE,price);
+        map.put(Product.DESCRIPTION,description);
+        map.put(Product.LAST_UPDATED, FieldValue.serverTimestamp());
+        DocumentReference productReference = db.collection(Product.COLLECTION)
+                .document(productId);
+        productReference.update(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                listener.onComplete(null);
+            }
+        });
+    }
 
     public void order(Product product, String newEmail,Model.Listener<Void> listener){
         db = FirebaseFirestore.getInstance();

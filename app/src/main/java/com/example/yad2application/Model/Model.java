@@ -283,8 +283,19 @@ public class Model {
         });
     }
 
+    public void updateProduct(String productId,String name, String price,String description,Model.Listener<Void> listener){
+        firebaseModel.updateProduct(productId, name, price, description, new Listener<Void>() {
+            @Override
+            public void onComplete(Void data) {
+                executor.execute(()->{
+                    localDb.productDao().updateProduct(productId,name,price,description);
+                    listener.onComplete(null);
+                });
+            }
+        });
+    }
 
-    public void order(Product product, String newEmail, Listener<Void> listener) {
+        public void order(Product product, String newEmail, Listener<Void> listener) {
         firebaseModel.order(product,newEmail, new Listener<Void>() {
             @Override
             public void onComplete(Void data) {
