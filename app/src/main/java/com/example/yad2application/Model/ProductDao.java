@@ -38,6 +38,11 @@ public interface ProductDao {
     void updateProduct(String productId,String name, String price,String description);
 
 
+    @Query("UPDATE Product SET ownerEmail = :newEmail, customerEmail = :newEmail WHERE ownerEmail = :oldEmail OR customerEmail = :oldEmail")
+    void updateProductAfterUserChangedEmail(String oldEmail, String newEmail);
+
+
+
     @Delete
     void delete(Product product);
 

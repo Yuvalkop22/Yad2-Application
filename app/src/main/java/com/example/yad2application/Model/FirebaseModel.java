@@ -18,8 +18,11 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -365,6 +368,37 @@ public class FirebaseModel {
                 }
             }
         });
+    }
+    public void editEmailFromProducts(String oldEmail,String newEmail,Model.Listener<Void> listener){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+// Create a query to find all documents with the old email in either the ownerEmail or customerEmail field
+        Query query = db.collection(Product.COLLECTION)
+                .whereEqualTo("ownerEmail", oldEmail)
+                .whereEqualTo("customerEmail", oldEmail);
+
+        query.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                WriteBatch batch = db.batch();
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    // Update the ownerEmail and customerEmail fields to the new email
+                    DocumentReference docRef = db.collection(Product.COLLECTION).document(document.getId());
+                    batch.update(docRef, "ownerEmail", newEmail);
+                    batch.update(docRef, "customerEmail", newEmail);
+                }
+                // Commit the batch update and handle the completion listener
+                batch.commit().addOnCompleteListener(batchTask -> {
+                    if (batchTask.isSuccessful()) {
+                        listener.onComplete(null);
+                    } else {
+                        listener.onComplete(null);
+                    }
+                });
+            } else {
+                listener.onComplete(null);
+            }
+        });
+
     }
 
         public void deleteProduct(Product product, Model.Listener<Void> listener) {
