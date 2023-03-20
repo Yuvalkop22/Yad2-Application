@@ -73,7 +73,7 @@ public class ProductPageFragment extends Fragment {
         getParentFragmentManager().setFragmentResultListener("EditproductDetail", this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                Log.d("TAG", "In product page -> name: " + result.getString("name"));
+                Log.d("TAG", "In product pag1e -> name: " + result.getString("name"));
 
                 Product pr = (Product) result.getSerializable("product");
                 binding.textProductNamePreview.setText(pr.getName());
