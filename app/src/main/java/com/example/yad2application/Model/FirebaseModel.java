@@ -363,6 +363,16 @@ public class FirebaseModel {
                 listener.onComplete(null);
             }
         });
+
+        storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference imagesRef = storageRef.child("images/products/" + product.getName() + ".jpg");
+        imagesRef.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                listener.onComplete(null);
+            }
+        });
     }
 
 
