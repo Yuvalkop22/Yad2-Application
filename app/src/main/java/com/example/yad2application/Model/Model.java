@@ -287,18 +287,24 @@ public class Model {
     }
     public void updateUserEmail(String oldEmail,String email,String password,Model.Listener<Boolean> listener){
         firebaseModel.editUserFirebase(email,password,(FirebaseUser)->{
-            if (FirebaseUser != null){
-                firebaseModel.editEmailFromProducts(oldEmail, email, (unued) -> {
-                    executor.execute(() -> {
-                        localDb.productDao().updateProductAfterUserChangedEmail(oldEmail, email);
-                    });
-                firebaseModel.editUserDocument(oldEmail,email,(unused)-> {
-                    executor.execute(() -> {
-                        localDb.userDao().updateProductEmail(email);
-                    });
+            if (FirebaseUser != null) {
+                firebaseModel.editEmailFromProducts(oldEmail, email, new Listener<Void>() {
+                    @Override
+                    public void onComplete(Void data) {
+                        executor.execute(() -> {
+                            localDb.productDao().updateProductAfterUserChangedEmail(oldEmail, email);
+                        });
+                        firebaseModel.editUserDocument(oldEmail, email, new Listener<Void>() {
+                            @Override
+                            public void onComplete(Void data) {
+                                executor.execute(() -> {
+                                    localDb.userDao().updateProductEmail(email);
+                                });
+                            }
+                        });
+                        listener.onComplete(true);
+                    }
                 });
-                });
-                    listener.onComplete(true);
             }else{
                 listener.onComplete(false);
             }
