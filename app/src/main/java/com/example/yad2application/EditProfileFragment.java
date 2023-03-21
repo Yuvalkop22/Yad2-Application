@@ -2,9 +2,12 @@ package com.example.yad2application;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
@@ -54,6 +57,26 @@ public class EditProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentEditProfileBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
+
+        cameraLauncher = registerForActivityResult(new ActivityResultContracts.TakePicturePreview(), new ActivityResultCallback<Bitmap>() {
+            @Override
+            public void onActivityResult(Bitmap result) {
+                if (result != null) {
+                    binding.avatarImg.setImageBitmap(result);
+                    isAvatarSelected = true;
+                }
+            }
+        });
+        galleryLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(), new ActivityResultCallback<Uri>() {
+            @Override
+            public void onActivityResult(Uri result) {
+                if (result != null) {
+                    binding.avatarImg.setImageURI(result);
+                    isAvatarSelected = true;
+                }
+            }
+        });
+
         getParentFragmentManager().setFragmentResultListener("EditUserDetails", this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
@@ -62,27 +85,43 @@ public class EditProfileFragment extends Fragment {
                     String oldEmail = user.getEmail();
                     binding.email.setText(user.getEmail());
                     Picasso.get().load(user.getAvatarUrl()).into(binding.avatarImg);
-
-                    binding.update.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            String newEmail = binding.email.getText().toString();
-                            String password = Model.instance().getUser().getValue().getPassword();
-                            auth = FirebaseAuth.getInstance();
-                            Model.instance().updateUser(oldEmail,newEmail,user, (unused) -> {
-                                Toast.makeText(getContext(), "User Updated Successfully", Toast.LENGTH_LONG).show();
+                    if (isAvatarSelected) {
+                        Bitmap bitmap = ((BitmapDrawable) binding.avatarImg.getDrawable()).getBitmap();
+                        Model.instance().uploadImageUser(user.getEmail(), bitmap, url -> {
+                            if (url != null) {
+                                user.setAvatarUrl(String.valueOf(url));
+                            }
+                            binding.update.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    String newEmail = binding.email.getText().toString();
+                                    auth = FirebaseAuth.getInstance();
+                                    Model.instance().updateUser(oldEmail, newEmail, user, (unused) -> {
+                                        Toast.makeText(getContext(), "User Updated Successfully", Toast.LENGTH_LONG).show();
+                                    });
+                                }
                             });
-                        }
-                    });
+                        });
+                    } else {
+                        binding.update.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String newEmail = binding.email.getText().toString();
+                                auth = FirebaseAuth.getInstance();
+                                Model.instance().updateUser(oldEmail, newEmail, user, (unused) -> {
+                                    Toast.makeText(getContext(), "User Updated Successfully", Toast.LENGTH_LONG).show();
+                                });
+                            }
+                        });
+                    }
                 }
             }
         });
-
-        binding.cameraButton.setOnClickListener(view1->{
+        binding.cameraButtonEditProfile.setOnClickListener(view1->{
             cameraLauncher.launch(null);
         });
 
-        binding.galleryButton.setOnClickListener(view1->{
+        binding.galleryButtonEditPrfoile.setOnClickListener(view1->{
             galleryLauncher.launch("image/*");
         });
 
@@ -111,6 +150,7 @@ public class EditProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
     }
+
 
 
     @Override
