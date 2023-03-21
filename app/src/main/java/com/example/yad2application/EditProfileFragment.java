@@ -78,45 +78,42 @@ public class EditProfileFragment extends Fragment {
         });
 
         getParentFragmentManager().setFragmentResultListener("EditUserDetails", this, new FragmentResultListener() {
-            @Override
-            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                User user = (User) result.getSerializable("user");
-                if (user != null) {
-                    String oldEmail = user.getEmail();
-                    binding.email.setText(user.getEmail());
-                    Picasso.get().load(user.getAvatarUrl()).into(binding.avatarImg);
-                    if (isAvatarSelected) {
-                        Bitmap bitmap = ((BitmapDrawable) binding.avatarImg.getDrawable()).getBitmap();
-                        Model.instance().uploadImageUser(user.getEmail(), bitmap, url -> {
-                            if (url != null) {
-                                user.setAvatarUrl(String.valueOf(url));
+                    @Override
+                    public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                        User user = (User) result.getSerializable("user");
+                        if (user != null) {
+                            String oldEmail = user.getEmail();
+                            binding.email.setText(user.getEmail());
+                            Picasso.get().load(user.getAvatarUrl()).into(binding.avatarImg);
+                            if (isAvatarSelected) {
+                                Bitmap bitmap = ((BitmapDrawable) binding.avatarImg.getDrawable()).getBitmap();
+                                Model.instance().uploadImageUser(user.getEmail(), bitmap, url -> {
+                                    if (url != null) {
+                                        user.setAvatarUrl(String.valueOf(url));
+                                    }
+                                    binding.update.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            String newEmail = binding.email.getText().toString();
+                                            auth = FirebaseAuth.getInstance();
+                                            Model.instance().updateUser(oldEmail, newEmail, user, (unused) -> {
+                                                Toast.makeText(getContext(), "User Updated Successfully", Toast.LENGTH_LONG).show();
+                                            });
+                                        }
+                                    });
+                                });
+                            } else {
+                                binding.update.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        String newEmail = binding.email.getText().toString();
+                                        auth = FirebaseAuth.getInstance();
+                                        Model.instance().updateUser(oldEmail, newEmail, user, (unused) -> {
+                                            Toast.makeText(getContext(), "User Updated Successfully", Toast.LENGTH_LONG).show();
+                                        });
+                                    }
+                                });
                             }
-                            binding.update.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    String newEmail = binding.email.getText().toString();
-                                    auth = FirebaseAuth.getInstance();
-                                    Model.instance().updateUser(oldEmail, newEmail, user, (unused) -> {
-                                        Toast.makeText(getContext(), "User Updated Successfully", Toast.LENGTH_LONG).show();
-                                    });
-                                }
-                            });
-                        });
-                    }
-                        else {
-                            binding.update.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    String newEmail = binding.email.getText().toString();
-                                    auth = FirebaseAuth.getInstance();
-                                    Model.instance().updateUser(oldEmail, newEmail, user, (unused) -> {
-                                        Toast.makeText(getContext(), "User Updated Successfully", Toast.LENGTH_LONG).show();
-                                    });
-                                }
-                            });
-                        }
-
-                    });
 
                     binding.cancellBtn.setOnClickListener(new View.OnClickListener() {
                         @Override
