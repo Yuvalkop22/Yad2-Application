@@ -32,7 +32,7 @@
                     app:srcCompat="@drawable/ic_baseline_add_photo_alternate_24" />
 
                 <ImageButton
-                    android:id="@+id/galleryButton"
+                    android:id="@+id/galleryButton_editPrfoile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|left"
@@ -40,7 +40,7 @@
                     android:src="@drawable/ic_baseline_image_search_24" />
 
                 <ImageButton
-                    android:id="@+id/cameraButton"
+                    android:id="@+id/cameraButton_editProfile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|right"

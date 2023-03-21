@@ -55,7 +55,7 @@ public class AddPostFragment extends Fragment {
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                 return false;
             }
-        },this, Lifecycle.State.RESUMED);
+         },this, Lifecycle.State.RESUMED);
 
         cameraLauncher = registerForActivityResult(new ActivityResultContracts.TakePicturePreview(), new ActivityResultCallback<Bitmap>() {
             @Override
