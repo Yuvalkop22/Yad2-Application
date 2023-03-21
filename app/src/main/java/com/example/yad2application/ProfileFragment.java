@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -38,7 +40,7 @@ import java.util.concurrent.ExecutionException;
 public class ProfileFragment extends Fragment {
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
-    NavController navController;
+    UserViewModel userViewModel;
     private FragmentProfileBinding binding;
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -51,8 +53,28 @@ public class ProfileFragment extends Fragment {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
         super.onCreate(savedInstanceState);
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
-        binding.profileText.setText("Hello, " + firebaseUser.getEmail());
+        userViewModel.getCurrentUser().observe(getViewLifecycleOwner(), new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                if(user != null){
+                    binding.profileText.setText("Hello, " + user.getEmail());
+                    binding.btnEditProfile.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("user", user);
+                            getParentFragmentManager().setFragmentResult("EditUserDetails", bundle);
+                            EditProfileFragment editProfileFragment = new EditProfileFragment();
+                            editProfileFragment.setArguments(bundle);
+                            Navigation.findNavController(view).navigate(R.id.editProfileFragment);
+                        }
+                    });
+                }
+            }
+        });
+
 
         binding.btnAllOwner.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,18 +90,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        binding.btnEditProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Bundle bundle = new Bundle();
-                User user = Model.instance().getUser().getValue();
-                bundle.putSerializable("user", user);
-                getParentFragmentManager().setFragmentResult("EditUserDetails", bundle);
-                EditProfileFragment editProfileFragment = new EditProfileFragment();
-                editProfileFragment.setArguments(bundle);
-                Navigation.findNavController(view).navigate(R.id.editProfileFragment);
-            }
-        });
+
 
         binding.btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +111,7 @@ public class ProfileFragment extends Fragment {
                 return false;
             }
         },getViewLifecycleOwner(), Lifecycle.State.RESUMED);
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         return view;
     }
 

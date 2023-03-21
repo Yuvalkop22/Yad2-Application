@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import android.util.Log;
@@ -39,6 +40,7 @@ public class EditProfileFragment extends Fragment {
     Boolean isAvatarSelected = false;
     ActivityResultLauncher<Void> cameraLauncher;
     ActivityResultLauncher<String> galleryLauncher;
+    UserViewModel userViewModel;
     FirebaseAuth auth;
     FirebaseUser firebaseUser;
         @Override
@@ -67,20 +69,11 @@ public class EditProfileFragment extends Fragment {
                             String newEmail = binding.email.getText().toString();
                             String password = Model.instance().getUser().getValue().getPassword();
                             auth = FirebaseAuth.getInstance();
-                            Model.instance().updateUserEmail(oldEmail, newEmail, password, new Model.Listener<User>() {
-                                @Override
-                                public void onComplete(User user1) {
-                                    if (user1 != null){
-                                        Toast.makeText(getContext(),"User Updated",Toast.LENGTH_LONG).show();
-                                    }else{
-                                        Toast.makeText(getContext(),"Fail...",Toast.LENGTH_LONG).show();
-                                    }
-                                }
+                            Model.instance().updateUser(oldEmail,newEmail,user, (unused) -> {
+                                Toast.makeText(getContext(), "User Updated Successfully", Toast.LENGTH_LONG).show();
                             });
                         }
                     });
-
-
                 }
             }
         });
@@ -110,7 +103,7 @@ public class EditProfileFragment extends Fragment {
                 return false;
             }
         },getViewLifecycleOwner(), Lifecycle.State.RESUMED);
-
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         return view;
     }
 

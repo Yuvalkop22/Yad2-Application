@@ -113,10 +113,8 @@ public class Model {
                     executor.execute(()->{
                         localDb.userDao().deleteAll();
                         localDb.userDao().insertAll(User);
-
                     });
-
-                    listener.onComplete(User);
+                        listener.onComplete(User);
                 });
             }
             else {
@@ -282,21 +280,43 @@ public class Model {
             }
         });
     }
-    public void updateUserEmail(String oldEmail, String email, String password, Listener<User> listener){
-        firebaseModel.editUserFirebase(email,password,(FirebaseUser)->{
+    /*    public void updateUserEmail(String oldEmail, String newEmail, String password, Listener<User> listener){
+        firebaseModel.editUserFirebase(newEmail,password,(FirebaseUser)->{
             if (FirebaseUser != null) {
-                firebaseModel.editUserDocument(oldEmail, email,(unused)->{
+                firebaseModel.editUserDocument(oldEmail, newEmail,(unused)->{
                    executor.execute(()->{
-                    localDb.userDao().updateUserEmail(email);
+                    localDb.userDao().updateUserEmail(oldEmail,newEmail);
                    });
-                   User user = localDb.userDao().getUserByEmail(email);
-                   listener.onComplete(user);
+                    User user = localDb.userDao().getUserByEmail(newEmail);
+                    listener.onComplete(user);
                 });
             }else{
                 listener.onComplete(null);
             }
         });
-    }
+    }*/
+
+        public void updateUser(String oldEmail,String newEmail,User user,Listener<Void>listener){
+            firebaseModel.editUserFirebase(newEmail,user.getPassword(),(FirebaseUser)->{
+                if (FirebaseUser != null) {
+                    user.setEmail(newEmail);
+                    firebaseModel.editUserDocument(user,(User)->{
+                        if (User != null) {
+                            firebaseModel.editEmailFromProducts(oldEmail,User.getEmail(), (BoolResult) -> {
+                                if (BoolResult == true) {
+                                    executor.execute(() -> {
+                                        localDb.userDao().updateUser(user);
+                                        localDb.productDao().updateProductAfterUserChangedEmail(oldEmail, newEmail);
+                                    });
+                                }
+                            });
+                        }
+                    });
+                    listener.onComplete(null);
+                }
+                listener.onComplete(null);
+            });
+        }
 
 
         public void order(Product product, String newEmail, Listener<Void> listener) {

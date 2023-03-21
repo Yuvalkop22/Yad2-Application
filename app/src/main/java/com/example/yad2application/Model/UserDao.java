@@ -6,6 +6,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
@@ -23,11 +24,9 @@ public interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(User... users);
 
-    @Query("UPDATE User SET email=:email")
-    void updateUserEmail(String email);
 
-    @Query("UPDATE User SET avatarUrl=:avatarUrl")
-    void updateUserAvatar(String avatarUrl);
+    @Update
+    void updateUser(User user);
 
     @Delete
     void delete(User user);

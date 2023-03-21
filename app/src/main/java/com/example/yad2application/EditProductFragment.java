@@ -68,7 +68,7 @@ public class EditProductFragment extends Fragment {
                         }else{
                             Model.instance().updateProduct(product.getProductId(), newName, newPrice, newDescription, (unused) -> {
                                 requireActivity().runOnUiThread(() -> {
-                                    Toast.makeText(getContext(),"Product Updated",Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getContext(),"Product Updated Go Back To Home",Toast.LENGTH_LONG).show();
                                 });
                             });
                         }

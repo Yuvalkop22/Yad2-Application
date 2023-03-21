@@ -15,11 +15,13 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Entity
 public class User implements Serializable {
     @PrimaryKey
     @NonNull
+    public String userId="";
     public String email="";
     public String password = "";
     public String avatarUrl="";
@@ -28,12 +30,20 @@ public class User implements Serializable {
     public User(){
     }
 
-    public User(@NonNull String email, String password, String avatarUrl) {
+    public User(String email, String password, String avatarUrl) {
+        this.email = email;
+        this.password = password;
+        this.avatarUrl = avatarUrl;
+        this.userId = UUID.randomUUID().toString();
+    }
+
+    public User(@NonNull String userId, String email, String password, String avatarUrl) {
+        this.userId = userId;
         this.email = email;
         this.password = password;
         this.avatarUrl = avatarUrl;
     }
-
+    static final String USERID = "userid";
     static final String EMAIL = "email";
     static final String PASSWORD = "password";
     static final String AVATAR = "avatar";
@@ -42,10 +52,11 @@ public class User implements Serializable {
     static final String LOCAL_LAST_UPDATED = "students_local_last_update";
 
     public static User fromJson(Map<String,Object> json){
+        String userid = (String)json.get(USERID);
         String email = (String)json.get(EMAIL);
         String password = (String) json.get(PASSWORD);
         String avatar = (String)json.get(AVATAR);
-        User user = new User(email,password,avatar);
+        User user = new User(userid,email,password,avatar);
         try{
             Timestamp time = (Timestamp) json.get(LAST_UPDATED);
             user.setLastUpdated(time.getSeconds());
@@ -69,6 +80,7 @@ public class User implements Serializable {
 
     public Map<String,Object> toJson(){
         Map<String, Object> json = new HashMap<>();
+        json.put(USERID,getUserId());
         json.put(EMAIL, getEmail());
         json.put(PASSWORD,getPassword());
         json.put(AVATAR, getAvatarUrl());
@@ -76,6 +88,10 @@ public class User implements Serializable {
         return json;
     }
 
+    @NonNull
+    public String getUserId() {
+        return userId;
+    }
 
     public String getPassword() {
         return password;
@@ -103,4 +119,15 @@ public class User implements Serializable {
         this.lastUpdated = lastUpdated;
     }
 
+    public void setUserId(@NonNull String userId) {
+        this.userId = userId;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

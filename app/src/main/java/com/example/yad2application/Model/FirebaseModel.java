@@ -113,7 +113,7 @@ public class FirebaseModel {
     }
     public void addUserToFirebase(User user, Model.Listener<Void> listener){
         db = FirebaseFirestore.getInstance();
-        db.collection(User.COLLECTION).document(user.getEmail()).set(user.toJson()).addOnCompleteListener(new OnCompleteListener<Void>() {
+        db.collection(User.COLLECTION).document(user.getUserId()).set(user.toJson()).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 listener.onComplete(null);
@@ -260,7 +260,7 @@ public class FirebaseModel {
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
         firebaseUser = auth.getCurrentUser();
-        db.collection(User.COLLECTION).document(firebaseUser.getEmail())
+        db.collection(User.COLLECTION).document(User.USERID)
                 .collection("OwnerProducts").document(product.getProductId()).set(product.toJson())
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -344,58 +344,16 @@ public class FirebaseModel {
                 });
     }
 
-    public void editUserDocument(String oldEmail,String email, Model.Listener<Void> listener) {
-        String newDocId = email;
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference oldDocRef = db.collection(User.COLLECTION).document(oldEmail);
-        oldDocRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+    public void editUserDocument(User user, Model.Listener<User> listener) {
+        db = FirebaseFirestore.getInstance();
+        db.collection(User.COLLECTION).document(user.getUserId()).set(user.toJson()).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {
-                    Map<String, Object> data = documentSnapshot.getData();
-                    data.remove(User.EMAIL);
-                    data.remove(User.LAST_UPDATED);
-                    data.put(User.EMAIL,email);
-                    data.put(User.LAST_UPDATED,FieldValue.serverTimestamp());
-                    DocumentReference newDocRef = db.collection(User.COLLECTION).document(newDocId);
-                    newDocRef.set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            oldDocRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Log.d("TAG", "Old document deleted successfully.");
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.e("TAG", "Failed to delete old document.", e);
-                                }
-                            });
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.e("TAG", "Failed to create new document.", e);
-                        }
-                    });
-                } else {
-                    Log.d("TAG", "Old document does not exist.");
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    listener.onComplete(user);
+                }else{
+                    listener.onComplete(null);
                 }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e("TAG", "Failed to get old document.", e);
-            }
-        });
-        HashMap<String,Object> hashMap = new HashMap<>();
-        hashMap.put(User.EMAIL,email);
-        DocumentReference documentReference = db.collection(User.COLLECTION).document(newDocId);
-        documentReference.update(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                listener.onComplete(null);
             }
         });
     }
@@ -428,36 +386,21 @@ public class FirebaseModel {
         });
     }
 
-    public void editEmailFromProducts(String oldEmail,String newEmail,Model.Listener<Void> listener){
+    public void editEmailFromProducts(String oldEmail,String newEmail,Model.Listener<Boolean> listener){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-// Create a query to find all documents with the old email in either the ownerEmail or customerEmail field
-        Query query = db.collection(Product.COLLECTION)
-                .whereEqualTo("ownerEmail", oldEmail)
-                .whereEqualTo("customerEmail", oldEmail);
-
-        query.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                WriteBatch batch = db.batch();
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    // Update the ownerEmail and customerEmail fields to the new email
-                    DocumentReference docRef = db.collection(Product.COLLECTION).document(document.getId());
-                    batch.update(docRef, "ownerEmail", newEmail);
-                    batch.update(docRef, "customerEmail", newEmail);
-                }
-                // Commit the batch update and handle the completion listener
-                batch.commit().addOnCompleteListener(batchTask -> {
-                    if (batchTask.isSuccessful()) {
-                        listener.onComplete(null);
-                    } else {
-                        listener.onComplete(null);
+        db.collection(Product.COLLECTION)
+                .whereEqualTo(Product.OWNEREMAIL,oldEmail)
+                .whereEqualTo(Product.CUSTOMEREMAIL,oldEmail)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()){
+                            listener.onComplete(true);
+                        }
+                        listener.onComplete(false);
                     }
                 });
-            } else {
-                listener.onComplete(null);
-            }
-        });
-
     }
 
         public void deleteProduct(Product product, Model.Listener<Void> listener) {
