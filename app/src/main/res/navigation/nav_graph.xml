@@ -144,8 +144,8 @@
     <fragment
         android:id="@+id/editProfileFragment"
         android:name="com.example.yad2application.EditProfileFragment"
-        android:label="fragment_edit_profile"
-        tools:layout="@layout/fragment_edit_profile" >
+        android:label="Edit Profile"
+        tools:layout="@layout/fragment_edit_profile">
         <action
             android:id="@+id/action_editProfileFragment_to_firstFragment"
             app:destination="@id/firstFragment" />

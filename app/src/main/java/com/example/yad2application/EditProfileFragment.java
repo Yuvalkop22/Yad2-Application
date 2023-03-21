@@ -115,8 +115,15 @@ public class EditProfileFragment extends Fragment {
                                 }
                             });
                         }
-                }else{
-                    Log.e("TAG","User is null");
+
+                    });
+
+                    binding.cancellBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Navigation.findNavController(view).navigate(R.id.profileFragment);
+                        }
+                    });
                 }
             }
         });
