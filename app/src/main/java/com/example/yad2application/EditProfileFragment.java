@@ -102,18 +102,21 @@ public class EditProfileFragment extends Fragment {
                                 }
                             });
                         });
-                    } else {
-                        binding.update.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                String newEmail = binding.email.getText().toString();
-                                auth = FirebaseAuth.getInstance();
-                                Model.instance().updateUser(oldEmail, newEmail, user, (unused) -> {
-                                    Toast.makeText(getContext(), "User Updated Successfully", Toast.LENGTH_LONG).show();
-                                });
-                            }
-                        });
                     }
+                        else {
+                            binding.update.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    String newEmail = binding.email.getText().toString();
+                                    auth = FirebaseAuth.getInstance();
+                                    Model.instance().updateUser(oldEmail, newEmail, user, (unused) -> {
+                                        Toast.makeText(getContext(), "User Updated Successfully", Toast.LENGTH_LONG).show();
+                                    });
+                                }
+                            });
+                        }
+                }else{
+                    Log.e("TAG","User is null");
                 }
             }
         });
