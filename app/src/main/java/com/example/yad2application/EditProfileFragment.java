@@ -74,6 +74,13 @@ public class EditProfileFragment extends Fragment {
                             });
                         }
                     });
+
+                    binding.cancellBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Navigation.findNavController(view).navigate(R.id.profileFragment);
+                        }
+                    });
                 }
             }
         });
