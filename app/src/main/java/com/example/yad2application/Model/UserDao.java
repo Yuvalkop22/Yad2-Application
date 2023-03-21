@@ -24,10 +24,10 @@ public interface UserDao {
     void insertAll(User... users);
 
     @Query("UPDATE User SET email=:email")
-    void updateProductEmail(String email);
+    void updateUserEmail(String email);
 
     @Query("UPDATE User SET avatarUrl=:avatarUrl")
-    void updateProductAvatar(String avatarUrl);
+    void updateUserAvatar(String avatarUrl);
 
     @Delete
     void delete(User user);

@@ -5,14 +5,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.core.os.HandlerCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
@@ -285,28 +282,18 @@ public class Model {
             }
         });
     }
-    public void updateUserEmail(String oldEmail,String email,String password,Model.Listener<Boolean> listener){
+    public void updateUserEmail(String oldEmail, String email, String password, Listener<User> listener){
         firebaseModel.editUserFirebase(email,password,(FirebaseUser)->{
             if (FirebaseUser != null) {
-                firebaseModel.editEmailFromProducts(oldEmail, email, new Listener<Void>() {
-                    @Override
-                    public void onComplete(Void data) {
-                        executor.execute(() -> {
-                            localDb.productDao().updateProductAfterUserChangedEmail(oldEmail, email);
-                        });
-                        firebaseModel.editUserDocument(oldEmail, email, new Listener<Void>() {
-                            @Override
-                            public void onComplete(Void data) {
-                                executor.execute(() -> {
-                                    localDb.userDao().updateProductEmail(email);
-                                });
-                            }
-                        });
-                        listener.onComplete(true);
-                    }
+                firebaseModel.editUserDocument(oldEmail, email,(unused)->{
+                   executor.execute(()->{
+                    localDb.userDao().updateUserEmail(email);
+                   });
+                   User user = localDb.userDao().getUserByEmail(email);
+                   listener.onComplete(user);
                 });
             }else{
-                listener.onComplete(false);
+                listener.onComplete(null);
             }
         });
     }

@@ -353,6 +353,10 @@ public class FirebaseModel {
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {
                     Map<String, Object> data = documentSnapshot.getData();
+                    data.remove(User.EMAIL);
+                    data.remove(User.LAST_UPDATED);
+                    data.put(User.EMAIL,email);
+                    data.put(User.LAST_UPDATED,FieldValue.serverTimestamp());
                     DocumentReference newDocRef = db.collection(User.COLLECTION).document(newDocId);
                     newDocRef.set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override

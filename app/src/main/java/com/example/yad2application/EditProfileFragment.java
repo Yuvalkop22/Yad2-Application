@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.Lifecycle;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,6 +27,10 @@ import com.example.yad2application.Model.Product;
 import com.example.yad2application.Model.User;
 import com.example.yad2application.databinding.FragmentEditProfileBinding;
 import com.example.yad2application.databinding.FragmentProductPageBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 public class EditProfileFragment extends Fragment {
@@ -34,7 +39,8 @@ public class EditProfileFragment extends Fragment {
     Boolean isAvatarSelected = false;
     ActivityResultLauncher<Void> cameraLauncher;
     ActivityResultLauncher<String> galleryLauncher;
-
+    FirebaseAuth auth;
+    FirebaseUser firebaseUser;
         @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,19 +61,26 @@ public class EditProfileFragment extends Fragment {
                     binding.email.setText(user.getEmail());
                     Picasso.get().load(user.getAvatarUrl()).into(binding.avatarImg);
 
-
                     binding.update.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             String newEmail = binding.email.getText().toString();
                             String password = Model.instance().getUser().getValue().getPassword();
-                            Model.instance().updateUserEmail(oldEmail,newEmail,password, (unused) -> {
-                                requireActivity().runOnUiThread(() -> {
-                                    Navigation.findNavController(view).navigate(R.id.firstFragment);
-                                });
+                            auth = FirebaseAuth.getInstance();
+                            Model.instance().updateUserEmail(oldEmail, newEmail, password, new Model.Listener<User>() {
+                                @Override
+                                public void onComplete(User user1) {
+                                    if (user1 != null){
+                                        Toast.makeText(getContext(),"User Updated",Toast.LENGTH_LONG).show();
+                                    }else{
+                                        Toast.makeText(getContext(),"Fail...",Toast.LENGTH_LONG).show();
+                                    }
+                                }
                             });
                         }
                     });
+
+
                 }
             }
         });
