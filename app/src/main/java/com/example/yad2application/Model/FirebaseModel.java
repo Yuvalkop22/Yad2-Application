@@ -385,7 +385,15 @@ public class FirebaseModel {
                 Log.e("TAG", "Failed to get old document.", e);
             }
         });
-
+        HashMap<String,Object> hashMap = new HashMap<>();
+        hashMap.put(User.EMAIL,email);
+        DocumentReference documentReference = db.collection(User.COLLECTION).document(newDocId);
+        documentReference.update(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                listener.onComplete(null);
+            }
+        });
     }
     public void editUserFirebase(String email, String password, Model.Listener<FirebaseUser> listener){
         auth = FirebaseAuth.getInstance();
