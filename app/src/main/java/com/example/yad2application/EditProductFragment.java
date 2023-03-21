@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import android.util.Log;
@@ -43,7 +44,6 @@ public class EditProductFragment extends Fragment {
         setHasOptionsMenu(true);
         binding = FragmentEditProductBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
-
         // Retrieve the arguments passed from the previous fragment
         getParentFragmentManager().setFragmentResultListener("EditproductDetail1",this,new FragmentResultListener(){
 
@@ -68,7 +68,7 @@ public class EditProductFragment extends Fragment {
                         }else{
                             Model.instance().updateProduct(product.getProductId(), newName, newPrice, newDescription, (unused) -> {
                                 requireActivity().runOnUiThread(() -> {
-                                    Navigation.findNavController(view).navigate(R.id.productsListFragment);
+                                    Toast.makeText(getContext(),"Product Updated Go Back To Home",Toast.LENGTH_LONG).show();
                                 });
                             });
                         }

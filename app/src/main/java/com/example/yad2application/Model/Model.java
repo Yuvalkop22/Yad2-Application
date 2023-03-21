@@ -5,14 +5,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.core.os.HandlerCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
@@ -116,10 +113,8 @@ public class Model {
                     executor.execute(()->{
                         localDb.userDao().deleteAll();
                         localDb.userDao().insertAll(User);
-
                     });
-
-                    listener.onComplete(User);
+                        listener.onComplete(User);
                 });
             }
             else {
@@ -285,31 +280,43 @@ public class Model {
             }
         });
     }
-    public void updateUserEmail(String oldEmail,String email,String password,Model.Listener<Boolean> listener){
-        firebaseModel.editUserFirebase(email,password,(FirebaseUser)->{
+    /*    public void updateUserEmail(String oldEmail, String newEmail, String password, Listener<User> listener){
+        firebaseModel.editUserFirebase(newEmail,password,(FirebaseUser)->{
             if (FirebaseUser != null) {
-                firebaseModel.editEmailFromProducts(oldEmail, email, new Listener<Void>() {
-                    @Override
-                    public void onComplete(Void data) {
-                        executor.execute(() -> {
-                            localDb.productDao().updateProductAfterUserChangedEmail(oldEmail, email);
-                        });
-                        firebaseModel.editUserDocument(oldEmail, email, new Listener<Void>() {
-                            @Override
-                            public void onComplete(Void data) {
-                                executor.execute(() -> {
-                                    localDb.userDao().updateProductEmail(email);
-                                });
-                            }
-                        });
-                        listener.onComplete(true);
-                    }
+                firebaseModel.editUserDocument(oldEmail, newEmail,(unused)->{
+                   executor.execute(()->{
+                    localDb.userDao().updateUserEmail(oldEmail,newEmail);
+                   });
+                    User user = localDb.userDao().getUserByEmail(newEmail);
+                    listener.onComplete(user);
                 });
             }else{
-                listener.onComplete(false);
+                listener.onComplete(null);
             }
         });
-    }
+    }*/
+
+        public void updateUser(String oldEmail,String newEmail,User user,Listener<Void>listener){
+            firebaseModel.editUserFirebase(newEmail,user.getPassword(),(FirebaseUser)->{
+                if (FirebaseUser != null) {
+                    user.setEmail(newEmail);
+                    firebaseModel.editUserDocument(user,(User)->{
+                        if (User != null) {
+                            firebaseModel.editEmailFromProducts(oldEmail,User.getEmail(), (BoolResult) -> {
+                                if (BoolResult == true) {
+                                    executor.execute(() -> {
+                                        localDb.userDao().updateUser(user);
+                                        localDb.productDao().updateProductAfterUserChangedEmail(oldEmail, newEmail);
+                                    });
+                                }
+                            });
+                        }
+                    });
+                    listener.onComplete(null);
+                }
+                listener.onComplete(null);
+            });
+        }
 
 
         public void order(Product product, String newEmail, Listener<Void> listener) {

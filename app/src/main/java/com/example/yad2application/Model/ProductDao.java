@@ -42,7 +42,6 @@ public interface ProductDao {
     void updateProductAfterUserChangedEmail(String oldEmail, String newEmail);
 
 
-
     @Delete
     void delete(Product product);
 

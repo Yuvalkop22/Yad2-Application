@@ -11,8 +11,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,6 +28,10 @@ import com.example.yad2application.Model.Product;
 import com.example.yad2application.Model.User;
 import com.example.yad2application.databinding.FragmentEditProfileBinding;
 import com.example.yad2application.databinding.FragmentProductPageBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 public class EditProfileFragment extends Fragment {
@@ -34,7 +40,9 @@ public class EditProfileFragment extends Fragment {
     Boolean isAvatarSelected = false;
     ActivityResultLauncher<Void> cameraLauncher;
     ActivityResultLauncher<String> galleryLauncher;
-
+    UserViewModel userViewModel;
+    FirebaseAuth auth;
+    FirebaseUser firebaseUser;
         @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,16 +63,14 @@ public class EditProfileFragment extends Fragment {
                     binding.email.setText(user.getEmail());
                     Picasso.get().load(user.getAvatarUrl()).into(binding.avatarImg);
 
-
                     binding.update.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             String newEmail = binding.email.getText().toString();
                             String password = Model.instance().getUser().getValue().getPassword();
-                            Model.instance().updateUserEmail(oldEmail,newEmail,password, (unused) -> {
-                                requireActivity().runOnUiThread(() -> {
-                                    Navigation.findNavController(view).navigate(R.id.firstFragment);
-                                });
+                            auth = FirebaseAuth.getInstance();
+                            Model.instance().updateUser(oldEmail,newEmail,user, (unused) -> {
+                                Toast.makeText(getContext(), "User Updated Successfully", Toast.LENGTH_LONG).show();
                             });
                         }
                     });
@@ -97,7 +103,7 @@ public class EditProfileFragment extends Fragment {
                 return false;
             }
         },getViewLifecycleOwner(), Lifecycle.State.RESUMED);
-
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         return view;
     }
 

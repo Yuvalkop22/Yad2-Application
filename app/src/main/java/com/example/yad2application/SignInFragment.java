@@ -7,6 +7,7 @@ import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import android.util.Log;
@@ -24,6 +25,7 @@ import com.example.yad2application.databinding.FragmentSignInBinding;
 
 public class SignInFragment extends Fragment {
     FragmentSignInBinding binding;
+    UserViewModel userViewModel;
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
@@ -50,6 +52,7 @@ public class SignInFragment extends Fragment {
                 return false;
             }
         },this, Lifecycle.State.RESUMED);
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
     }
 
     @Override
